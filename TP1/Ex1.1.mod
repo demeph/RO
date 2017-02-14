@@ -17,7 +17,7 @@
 
 	var x{indCasquette} >= 0;
 
-#foonction objectif
+#fonction objectif
 
 	maximize profit : sum{j in  indCasquette} profite[j]*x[j];
 
