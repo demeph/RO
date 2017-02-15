@@ -12,11 +12,14 @@
 	set indColonne := 1..nbColonne;
     
 	param nbInfirmiere{indiceParPlage}; # coeff de membre droite des contraintes
-	param matriceIndice{indiceParPlage,indColonne}; 
+	param matriceIndice{indiceParPlage,indColonne};
+
+	param heuresSup{indiceParPlage};
 
 #Declaration de variables non-negatives sous la forme
 #d'un tableau de variables indicées sur le nombre infirmiere qui commencent leur service à la tranche d'horaire
 
+	var s{indPlage} >= 0 integer;
 	var x{indPlage} >= 0 integer;
 
 #Fonction objectif
@@ -25,14 +28,18 @@
 
 #contraintes
 
-	s.t. contrainte{i in indPlage} : sum{j in indColonne} x[matriceIndice[i,j]] >= nbInfirmiere[i];
+	s.t. contrainte{i in indPlage} : sum{j in indColonne} x[matriceIndice[i,j]]+s[i] >= nbInfirmiere[i];
+		nombreTotalInfirmiere : sum{i in indPlage} x[i] <= 80;
+		contrainteSurNbSup{i in indPlage} : s[i] <= x[i];
 
 #Resolution
 	solve;
 
 #Affichage 
 	display : x; #Affichage des variables de decision
-	display : 'Z= ',sum{i in  indiceParPlage} x[i]; #affichage de nombre oprimale des infirmieres
+	display : s;
+	display : 'Z= ',sum{i in  indiceParPlage} x[i]; #affichage de nombre optimale des infirmieres
+	display : 'Z= ',sum{i in  indiceParPlage} s[i]; #affichage de nombre optimale des infirmieres
 
 data;
 
@@ -67,4 +74,17 @@ data;
 								   10 10 9 7 6
 								   11 11 10 8 7
 								   12 12 11 9 8;
+	param heuresSup := 1 8
+					   2 9
+					   3 10
+					   4 11
+					   5 12
+					   6 1
+					   7 2
+					   8 3
+					   9 4
+					   10 5
+					   11 6
+					   12 7;
+
 end;
