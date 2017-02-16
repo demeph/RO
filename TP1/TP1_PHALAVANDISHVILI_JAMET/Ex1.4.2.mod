@@ -1,3 +1,4 @@
+/* PHALAVANDISHVILI Demetre - JAMET Félix - Groupe 601B*/
 /* Exercice 1.4 question 1 modele implicite*/ 
 
 #Declaration des variables utilisés
@@ -5,19 +6,11 @@
 	# nombre de plage d'horaires
 	param nbPlageHoraire; 
 	
-	#enseble de tranche horaire
-	set indPlage := 1..nbPlageHoraire; 
-
-	#nombre des indices necessaire pour calculer nombre minimale des infirmieres dans chaque plage d'horaire
-	param nbColonne; 
-
-	set indColonne := 1..nbColonne;
+	#enseble de tranche horaire,pour réaliser le modele implicite, on commence la numérotation à 0 jusqu'a nbPlageHoraire-1
+	set indPlage := 0..nbPlageHoraire; 
     
   	#coeff de membre droite des contraintes
 	param nbInfirmiere{indPlage};
-
-	#matrice contenant les indices de chaque plage horaire pour chaque contrainte
-	param matriceIndice{indPlage,indColonne}; 
 
 	#Des indices correspondant au plage d'horaire effectuant heure supplémentaire
 	param heuresSup{indPlage};
@@ -36,7 +29,7 @@
 
 #contraintes
 
-	s.t. contrainte{i in indPlage} : sum{j in indColonne} x[matriceIndice[i,j]]+s[i] >= nbInfirmiere[i];
+	s.t. contrainte{i in indPlage} : x[(i mod 12)] + x[((i-1) mod 12)] + x[((i-3) mod 12)] + x[((i-4) mod 12)] +s[(i-5)mod 12]>= nbInfirmiere[i];
 
 		#contrainte sur le nombre total des infirmieres
 		nombreTotalInfirmiere : sum{i in indPlage} x[i] <= 80;
@@ -55,46 +48,19 @@
 
 data;
 
-	param nbPlageHoraire := 12;
+	param nbPlageHoraire := 11;
 
-	param nbColonne := 4;
-
-	param nbInfirmiere := 1 35
+	param nbInfirmiere := 0 35
+						  1 40 
 						  2 40 
-						  3 40 
-						  4 35
+						  3 35
+						  4 30
 						  5 30
-						  6 30
-						  7 35
-						  8 30
-						  9 20
+						  6 35
+						  7 30
+						  8 20
+						  9 15
 						  10 15
-						  11 15
-						  12 15;
-
-	param matriceIndice : 1 2 3 4 := 1 1 12 10 9
-								   2 2 1  11 10
-								   3 3 2  12 11
-								   4 4 3  12  1
-								   5 5 4  2   1
-								   6 6 5  3   2
-								   7 7 6  4   3
-								   8 8 7  5   4
-								   9 9 8  6   5
-								   10 10 9 7 6
-								   11 11 10 8 7
-								   12 12 11 9 8;
-	param heuresSup := 1 8
-					   2 9
-					   3 10
-					   4 11
-					   5 12
-					   6 1
-					   7 2
-					   8 3
-					   9 4
-					   10 5
-					   11 6
-					   12 7;
+						  11 15;
 
 end;

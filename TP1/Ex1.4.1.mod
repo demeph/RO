@@ -2,20 +2,24 @@
 
 #Declaration des variables utilisés
 
-	param nbPlageHoraire; # nombre de plage d'horaires
-	set indPlage := 1..nbPlageHoraire; #enseble de tranche horaire
+	# nombre de plage d'horaires
+	param nbPlageHoraire; 
+	
+	#enseble de tranche horaire
+	set indPlage := 1..nbPlageHoraire; 
 
-	param nbInfirmParPlage;
-	set indiceParPlage := 1..nbInfirmParPlage;
+	#nombre des indices necessaire pour calculer nombre minimale des infirmieres dans chaque plage d'horaire
+	param nbColonne; 
 
-	param nbColonne;
 	set indColonne := 1..nbColonne;
     
-	param nbInfirmiere{indiceParPlage}; # coeff de membre droite des contraintes
-	param matriceIndice{indiceParPlage,indColonne}; 
+  # coeff de membre droite des contraintes
+	param nbInfirmiere{indPlage};
 
-#Declaration de variables non-negatives sous la forme
-#d'un tableau de variables indicées sur le nombre infirmiere qui commencent leur service à la tranche d'horaire
+	#matrice contenant les indices de chaque plage horaire pour chaque contrainte
+	param matriceIndice{indPlage,indColonne}; 
+
+#Declaration de variables non-negatives sous la forme d'un tableau de variables indicées sur le nombre infirmiere qui commencent leur service à la tranche d'horaire
 
 	var x{indPlage} >= 0 integer;
 
@@ -32,13 +36,11 @@
 
 #Affichage 
 	display : x; #Affichage des variables de decision
-	display : 'Z= ',sum{i in  indiceParPlage} x[i]; #affichage de nombre oprimale des infirmieres
+	display : 'Z= ',sum{i in  indPlage} x[i]; #affichage de nombre oprimale des infirmieres
 
 data;
 
 	param nbPlageHoraire := 12;
-
-	param nbInfirmParPlage := 12;
 
 	param nbColonne := 4;
 
