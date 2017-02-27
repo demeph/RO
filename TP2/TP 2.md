@@ -4,4 +4,15 @@
 
 ### Quel type de problème est considéré dans le fichier scp.mod ?
 
-Le probleme décrit est le probème de couverture par ensembles, car si on regarde la fonction objectif on voit que la multiplication d'un variable binaires par un poids total d'un sous ensemble. A part de ca les concraintes de cette probleme ressemble à un probleme de couverturequ'on a vu dans l'exo 2.2 de TD2.
+Le probleme décrit est le probème de couverture par ensembles, car si on regarde la fonction objectif on voit que la multiplication d'un variable binaires par un poids total d'un sous ensemble i. A part de ca les concraintes de cette probleme ressemble à un probleme de couverture qu'on a vu dans l'exo 2.2 de TD2.
+
+###Capacité de GLPK
+
+- sur les données du fichier scpe5.dat
+	L'execution passe relativement vite, glpsol passe le temps a trouver les varibles optimale de notre probleme(il trouve la solution dans 1.1 s).
+
+- sur les données du fichier spclr13.dat
+	Au debut d'execution on passe beaucoup temps a genere les contraintes, puis on met du temps a trouver les valeurs optimales.
+
+####Conclusion
+	On peut conclure que glpsol met du temps a trouver les solutions sur les données aussi grand.
