@@ -1,4 +1,4 @@
-/* PHALAVANDISHVILI Demetre - JAMET Félix - Groupe 601B */ 
+/* PHALAVANDISHVILI Demetre - JAMET Félix - Groupe 601B */
 
 #Declaration des données du problème
 
@@ -24,23 +24,24 @@
 	var y{indEntrepot} binary;
 	var x{Scout} >= 0, <= 1;
 
-	# Fonction objectif
+# Fonction objectif
 
-	minimize cout : sum{i in indEntrepot} coutEntrepot[i]*y[i] + sum{(l,j) in Scout} matriceCout[l,j]*x[l,j];
+	minimize cout{i in indEntrepot} : coutEntrepot[i]*y[i] + sum{(i,j) in Scout} matriceCout[i,j]*x[i,j];
 
 # Contraintes
 
-	s.t. SatisfaireClient{i in indEntrepot} : sum{(i,j) in Scout} x[i,j] = 1; 
-	s.t. TailleEntrepotLimite{i in indEntrepot} : sum{(i,j) in Scout} mille*demandeClient[j] * x[i,j] <= capaciteEntrepot[i]*mille;
-	s.t. Contrainte{(i,j) in Scout} : x[i,j] <= y[i];
+	s.t. Contrainte{i in indEntrepot}:  sum{(i,j) in Scout} x[i,j] <= y[i];
+	s.t. SatisfaireClient: sum{(i,j) in Scout}  x[i,j] = 1;
+	s.t. TailleEntrepotLimite{(i,j) in Scout}: mille*demandeClient[j] * x[i,j] <= capaciteEntrepot[i]*mille;
+
 #Resolution 
 	solve;
 
 
 #Affichage
 	display : y;
-	display : x;
-	display : 'Z = ',sum{i in indEntrepot} coutEntrepot[i]*y[i] + sum{(l,j) in Scout} matriceCout[l,j]*x[l,j];
+	/*display : x;*/
+	display : 'Z = ',sum{(i,j) in Scout} ( coutEntrepot[i]*y[i] +  matriceCout[i,j]*x[i,j]);
 
 data;
 
