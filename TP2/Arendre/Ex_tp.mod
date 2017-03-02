@@ -23,7 +23,7 @@
 
 #Contrainte
 	
-	s.t. contrainte{i in indContr}: sum{j in indCol}  x[matriceContr[i,j]] <= mdroite[i];
+	s.t. contrainte{i in indContr} : sum{j in indCol}  x[matriceContr[i,j]] <= mdroite[i];
 
 #Resolution
 	solve;
