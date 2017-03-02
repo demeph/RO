@@ -26,13 +26,13 @@
 
 # Fonction objectif
 
-	minimize cout{i in indEntrepot} : coutEntrepot[i]*y[i] + sum{(i,j) in Scout} matriceCout[i,j]*x[i,j];
+	minimize cout : sum{i in indEntrepot}coutEntrepot[i]*y[i] + sum{(l,j) in Scout} matriceCout[l,j]*x[l,j];
 
 # Contraintes
 
-	s.t. Contrainte{i in indEntrepot}:  sum{(i,j) in Scout} x[i,j] <= y[i];
-	s.t. SatisfaireClient: sum{(i,j) in Scout}  x[i,j] = 1;
-	s.t. TailleEntrepotLimite{i in indEntrepot}: sum{(i,j) in Scout}  mille*demandeClient[j] * x[i,j] <= capaciteEntrepot[i]*mille;
+	s.t. Contrainte{i in indEntrepot,(i,j) in Scout} : x[i,j] <= y[i];
+	s.t. SatisfaireClient: sum{(i,j) in Scout} x[i,j] = 1;
+	s.t. TailleEntrepotLimite{i in indEntrepot,(i,j) in Scout} : demandeClient[j] * x[i,j] <= capaciteEntrepot[i];
 
 #Resolution 
 	solve;
@@ -41,7 +41,7 @@
 #Affichage
 	display : y;
 	/*display : x;*/
-	display : 'Z = ',sum{(i,j) in Scout} ( coutEntrepot[i]*y[i] +  matriceCout[i,j]*x[i,j]);
+	display : 'Z = ', sum{i in indEntrepot} coutEntrepot[i]*y[i] + sum{(l,j) in Scout} matriceCout[l,j]*x[l,j];
 
 data;
 
