@@ -22,7 +22,7 @@
 #Declaration d un tableau de variables binaires
 
 	var y{indEntrepot} binary;
-	var x{Scout} >= 0, <= 1;
+	var x{Scout} >= 0;
 
 # Fonction objectif
 
@@ -32,7 +32,7 @@
 
 	s.t. Contrainte{i in indEntrepot}:  sum{(i,j) in Scout} x[i,j] <= y[i];
 	s.t. SatisfaireClient: sum{(i,j) in Scout}  x[i,j] = 1;
-	s.t. TailleEntrepotLimite{(i,j) in Scout}: mille*demandeClient[j] * x[i,j] <= capaciteEntrepot[i]*mille;
+	s.t. TailleEntrepotLimite{i in indEntrepot}: sum{(i,j) in Scout}  mille*demandeClient[j] * x[i,j] <= capaciteEntrepot[i]*mille;
 
 #Resolution 
 	solve;
