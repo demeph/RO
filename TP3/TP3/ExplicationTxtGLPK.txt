@@ -1,0 +1,21 @@
+nombreDeVariable nombreConrtrainte
+coeff de chaque variable(separé par espace)
+nombredeVariable pour la contrainte 1
+indice1 indice2 indice3
+la valeur de la partie droite de contrainte 1
+
+nombredeVariable pour la contrainte 2
+indice1 indice3 indice4
+la valeur de la partie droite de contrainte 2
+
+...
+
+nombredeVariable pour la contrainte k
+indicek-2 indicek-1 indicek
+la valeur de la partie droite de contrainte k
+
+
+--------------------------------------
+GLP_FX : permet ecrire égalité de la parie gauche et droite de la contrainte
+GLP_LO : partie gauche sup egal au partie droite
+GLP_UP : partie droite inf egal au parite droite

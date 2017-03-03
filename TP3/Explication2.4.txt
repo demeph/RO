@@ -1,0 +1,34 @@
+nombrede contrainte=36 nombrede personne=nombre de machine=6
+coeff pour la fonction objectif
+
+1ere contrainte chaque personne doit etre affecte à une  et une seule machine :
+
+nombredeVariable pour la contrainte 1
+indice1 indice2 indice3 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte 1
+
+nombredeVariable pour la contrainte 2
+indice1 indice3 indice4 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte 2
+
+...
+
+nombredeVariable pour la contrainte k
+indice1 indice2 indice3 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte k
+
+2eme contrainte chaque machine doit etre affecte à une  et une seule personne :
+
+nombredeVariable pour la contrainte 1
+indice1 indice2 indice3 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte 1
+
+nombredeVariable pour la contrainte 2
+indice1 indice3 indice4 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte 2
+
+...
+
+nombredeVariable pour la contrainte k
+indice1 indice2 indice3 indice4 indice5 indice6 
+la valeur de la partie droite de contrainte k

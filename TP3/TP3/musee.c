@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	/* Contrainte Salle 1 */
 	ia[1] = 1;ja[1] = 1;ar[1] = 1.0; // à la position (1,1) de la matrice des contraintes, on a un 1.0 (correspondant à 1.0 * x_B) 
 	ia[2] = 1;ja[2] = 4;ar[2] = 1.0; // à la position (1,4) de la matrice des contraintes, on a un 1.0 (correspondant à 1.0 * x_E)
-	ia[3] = 1;ja[3] = 5;ar[3] = 1.0; // à la position (1,1) de la matrice des contraintes, on a un 1.0 (correspondant à 1.0 * x_F)
+	ia[3] = 1;ja[3] = 5;ar[3] = 1.0; // à la position (1,5) de la matrice des contraintes, on a un 1.0 (correspondant à 1.0 * x_F)
 
 	/* Contrainte Salle 2 */
 	ia[4] = 2;ja[4] = 1;ar[4] = 1.0; // à la position (2,1) de la matrice des contraintes, on a un 1.0 (correspondant à 1.0 * x_B)
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 	for(i = 0;i < NBVAR; i++) x[i] = glp_mip_col_val(prob,i+1); /* Récupération de la valeur des variables, Appel différent dans le cas d'un problème en variables continues : for(i = 0;i < p.nbvar;i++) x[i] = glp_get_col_prim(prob,i+1); */
 
 	printf("z = %lf\n",z);
-	for(i = 0;i < NBVAR;i++) printf("x%c = %d, ",'B'+i,(int)(x[i] + 0.5)); /* un cast est ajouté, x[i] pourrait être égal à 0.99999... */ 
+	for(i = 0;i < NBVAR;i++) printf("x%c = %d, \n",'B'+i,(int)(x[i] + 0.5)); /* un cast est ajouté, x[i] pourrait être égal à 0.99999... */ 
 	puts("");
 
 	/* libération mémoire */
