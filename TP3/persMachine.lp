@@ -1,25 +1,25 @@
 \* Problem: Pers/Machines *\
 
 Maximize
- obj: + 13 x1 + 13 x2 + 13 x3 + 13 x4 + 13 x5 + 13 x6 + 13 x7 + 13 x8
- + 13 x9 + 13 x10 + 13 x11 + 13 x12 + 13 x13 + 13 x14 + 13 x15 + 13 x16
- + 13 x17 + 13 x18 + 13 x19 + 13 x20 + 13 x21 + 13 x22 + 13 x23 + 13 x24
- + 13 x25 + 13 x26 + 13 x27 + 13 x28 + 13 x29 + 13 x30 + 13 x31 + 13 x32
- + 13 x33 + 13 x34 + 13 x35 + 13 x36
+ obj: + 13 x1 + 24 x2 + 31 x3 + 19 x4 + 40 x5 + 29 x6 + 18 x7 + 25 x8
+ + 30 x9 + 15 x10 + 43 x11 + 22 x12 + 20 x13 + 20 x14 + 27 x15 + 25 x16
+ + 34 x17 + 33 x18 + 23 x19 + 26 x20 + 28 x21 + 18 x22 + 37 x23 + 30 x24
+ + 28 x25 + 33 x26 + 34 x27 + 17 x28 + 38 x29 + 20 x30 + 19 x31 + 36 x32
+ + 25 x33 + 27 x34 + 45 x35 + 24 x36
 
 Subject To
- persMachine2: + x6 + x5 + x4 + x3 + x2 + x1 = 1
- persMachine3: + x12 + x11 + x10 + x9 + x8 + x7 = 1
- persMachine4: + x18 + x17 + x16 + x15 + x14 + x13 = 1
- persMachine5: + x24 + x23 + x22 + x21 + x20 + x19 = 1
- persMachine6: + x30 + x29 + x28 + x27 + x26 + x25 = 1
- persMachine1: + x36 + x35 + x34 + x33 + x32 + x31 = 1
- machinePers2: + x31 + x25 + x19 + x13 + x7 + x1 = 1
- machinePers3: + x32 + x26 + x20 + x14 + x8 + x2 = 1
- machinePers4: + x33 + x27 + x21 + x15 + x9 + x3 = 1
- machinePers5: + x33 + x28 + x22 + x16 + x10 + x4 = 1
- machinePers6: + x34 + x29 + x23 + x17 + x11 + x5 = 1
- machinePers1: + x1 + x36 + x30 + x24 + x18 + x12 = 1
+ persMachine1: + x6 + x5 + x4 + x3 + x2 + x1 = 1
+ persMachine2: + x12 + x11 + x10 + x9 + x8 + x7 = 1
+ persMachine3: + x18 + x17 + x16 + x15 + x14 + x13 = 1
+ persMachine4: + x24 + x23 + x22 + x21 + x20 + x19 = 1
+ persMachine5: + x30 + x29 + x28 + x27 + x26 + x25 = 1
+ persMachine6: + x36 + x35 + x34 + x33 + x32 + x31 = 1
+ machinePers1: + x31 + x25 + x19 + x13 + x7 + x1 = 1
+ machinePers2: + x32 + x26 + x20 + x14 + x8 + x2 = 1
+ machinePers3: + x33 + x27 + x21 + x15 + x9 + x3 = 1
+ machinePers4: + x34 + x28 + x22 + x16 + x10 + x4 = 1
+ machinePers5: + x35 + x29 + x23 + x17 + x11 + x5 = 1
+ machinePers6: + x36 + x30 + x24 + x18 + x12 + x6 = 1
 
 Bounds
  0 <= x1 <= 1

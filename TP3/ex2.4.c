@@ -134,14 +134,14 @@ int main(int argc, char *argv[])
 		numero[i - 1] = (char *) malloc (3  * sizeof(char)); // Même hypothèse sur la taille du problème
 		if (i < 7) {
 			strcpy(nomcontr[i-1], "persMachine");
-			sprintf(numero[i-1], "%d", (i%6+1));
+			sprintf(numero[i-1], "%d", (i%7));
 			strcat(nomcontr[i-1], numero[i-1]); /* Les contraintes sont nommés "salle1", "salle2"... */		
 			glp_set_row_name(prob, i, nomcontr[i-1]); /* Affectation du nom à la contrainte i */
 		}
 		else
 		{
 			strcpy(nomcontr[i-1], "machinePers");
-			sprintf(numero[i-1], "%d", (i%6+1));
+			sprintf(numero[i-1], "%d", (i%7)+1);
 			strcat(nomcontr[i-1], numero[i-1]); /* Les contraintes sont nommés "salle1", "salle2"... */		
 			glp_set_row_name(prob, i, nomcontr[i-1]); /* Affectation du nom à la contrainte i */	
 		}
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
 	/* définition des coefficients des variables dans la fonction objectif */
 
-	for(i = 1;i <= p.nbvar;i++) glp_set_obj_coef(prob,i,p.couts[i - i]);  
+	for(i = 1;i <= p.nbvar;i++) glp_set_obj_coef(prob,i,p.couts[i - 1]);  
 	
 	/* Définition des coefficients non-nuls dans la matrice des contraintes, autrement dit les coefficients de la matrice creuse */
 	/* Les indices commencent également à 1 ! */
