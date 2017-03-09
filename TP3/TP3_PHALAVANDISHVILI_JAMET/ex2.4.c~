@@ -1,7 +1,4 @@
-/* Utilisation de GLPK en mode bibliothèque */
-/* Il s'agit de l'exercice 2.2 des feuilles de TD, qui a servi à illustrer l'utilisation d'une matrice creuse avec GNUMathProg */
-/* Ici, les données sont séparées de la modélisation, et sont lues dans un fichier */
-/* Comme nous ne connaissons pas a priori la taille du problème, des allocations dynamiques sont nécessaires */
+/* TP 3 - PHALAVANDISHVILI Demetre - JAMET Félix - Gr 601B */
 
 #include <stdio.h>
 #include <stdlib.h>
