@@ -2,36 +2,63 @@
 #include <vector>
 #include <cmath>
 
-struct {
+#define N 5 // taille de l'ensemble qui contient les valeurs de 1 à 5
+
+typedef struct {
 	std::vector<int> regroupe;
 	int longuerTour;
-} regroupLong;
+}regroupLong;
 
+void copie(std::vector<int> & v,std::vector<int> & v1)
+{
+	for (int i = 0; i < v1.size();++i)
+	{
+		v.push_back(v1[i]);
+	}
+}
+
+void genereSSensemble(regroupLong l[])
+{
+	int nbElt = pow(2,N)-1; 
+	int nbEltSaisie = 0;
+	for (int i = 0; i < N; ++i)
+	{
+		l[i].regroupe.push_back(i+1);
+		nbEltSaisie++;
+	}
+	int k = 0;
+	while (nbEltSaisie < nbElt )
+	{
+		int p = l[k].regroupe[l[k].regroupe.size()-1];
+		for (int i = p; i <= N;++i)
+		{
+			for (int j = i+1; j <= N; ++j)
+			{
+				copie(l[nbEltSaisie].regroupe,l[k].regroupe);
+				l[nbEltSaisie].regroupe.push_back(j);
+				++nbEltSaisie;
+			}
+			++k;
+		}
+	}
+}
 
 int main()
 {
-	int n = 5;
-	int nbCaseBack = 0;
-	int nbElt = pow(2,5)-1;
-	int nbEltSaisie = 0;
-	nbElt -= 1;
-	regroupLong[nbElt] p;
-	std::vector<std::vector<int>> vectVect;
-	for (int i = 0; i < n; ++i)
+	int nbElt = pow(2,N)-1;
+	regroupLong liste[nbElt];	
+
+	genereSSensemble(liste);
+
+	for (int cpt = 0;cpt < nbElt;++cpt)
 	{
-		p[i].regroupe.push_back(i+1);
-		nbEltSaisie++;
-		nbCaseBack++;
-	}
-	while (nbEltSaisie > nbElt )
-	{
-		for ( i = 0; i<n; ++i)
+		int l = liste[cpt].regroupe.size();
+		int m = 0;
+		for ( m = 0; m < l;++m)
 		{
-			for (j = i+1; j<n;++j)
-			{
-				p[nbEltSaisie].regroupe = p[nbEltSaisie-nbCaseBack].regroupe;
-			}
+			std::cout << liste[cpt].regroupe[m] << " ";
 		}
+		std::cout << "\n";
 	}
 }
 
