@@ -1,0 +1,5 @@
+#ignore the build directory
+Projet/build/*
+
+#but keep the directory itself
+!Projet/build/.gitkeep
