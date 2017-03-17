@@ -1,8 +1,0 @@
-#ignore the build directory
-build/*
-
-#but keep the directory itself
-!build/.gitkeep
-
-#ignore documentation for now
-doxygen/
