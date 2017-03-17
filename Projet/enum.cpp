@@ -1,13 +1,16 @@
 #include <iostream>
 #include <vector>
+#include <array>
 #include <cmath>
 
 #define N 5 // taille de l'ensemble qui contient les valeurs de 1 à 5
+#define capaciteDrone 10
+std::array<int, N> volume = {2,4,2,2,4};
 
-typedef struct {
+struct regroupLong {
 	std::vector<int> regroupe;
 	int longuerTour;
-}regroupLong;
+};
 
 void copie(std::vector<int> & v,std::vector<int> & v1)
 {
@@ -17,25 +20,27 @@ void copie(std::vector<int> & v,std::vector<int> & v1)
 	}
 }
 
-void genereSSensemble(regroupLong l[])
+void genereSSensemble(std::vector<regroupLong> & liste)
 {
 	int nbElt = pow(2,N)-1; 
 	int nbEltSaisie = 0;
 	for (int i = 0; i < N; ++i)
 	{
-		l[i].regroupe.push_back(i+1);
-		nbEltSaisie++;
+		liste.push_back(regroupLong());
+		liste.back().regroupe.push_back(i+1);
+		++nbEltSaisie;
 	}
 	int k = 0;
-	while (nbEltSaisie < nbElt )
+	while ( nbEltSaisie < nbElt )
 	{
-		int p = l[k].regroupe[l[k].regroupe.size()-1];
+		int p = liste[k].regroupe[liste[k].regroupe.size()-1];
 		for (int i = p; i <= N;++i)
 		{
 			for (int j = i+1; j <= N; ++j)
 			{
-				copie(l[nbEltSaisie].regroupe,l[k].regroupe);
-				l[nbEltSaisie].regroupe.push_back(j);
+				liste.push_back(regroupLong());
+				copie(liste.back().regroupe,liste[k].regroupe);
+				liste.back().regroupe.push_back(j);
 				++nbEltSaisie;
 			}
 			++k;
@@ -43,14 +48,32 @@ void genereSSensemble(regroupLong l[])
 	}
 }
 
+std::vector<regroupLong> filterListe(std::vector<regroupLong> & liste)
+{
+	std::vector<regroupLong> l1;
+	for (int i = 0; i < liste.size(); ++i)
+	{
+		int capacite = 0;
+		for (int m = 0; m < liste[i].regroupe.size();++m) capacite += volume[liste[i].regroupe[m]];
+		if (capacite <= capaciteDrone) 
+		{
+			l1.push_back(regroupLong());
+			copie(l1.back().regroupe,liste[i].regroupe);
+		}
+	}
+	return l1;
+}
+
 int main()
 {
 	int nbElt = pow(2,N)-1;
-	regroupLong liste[nbElt];	
+	std::vector<regroupLong> liste;	
 
 	genereSSensemble(liste);
 
-	for (int cpt = 0;cpt < nbElt;++cpt)
+	liste = filterListe(liste);
+	
+	for (int cpt = 0;cpt < liste.size();++cpt)
 	{
 		int l = liste[cpt].regroupe.size();
 		int m = 0;
@@ -61,5 +84,3 @@ int main()
 		std::cout << "\n";
 	}
 }
-
-
