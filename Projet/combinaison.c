@@ -13,41 +13,50 @@
 #include <stdlib.h>
 #include <string.h>
 
-void combinaisons(int n, int p, int k, int *L, int *t, int r) {
-int i, j, j1, t2[n];
-if(r<p-k) return;
-if(k==p) {
-for(i=0;i<p;i++) printf("%d ", L[i] + 1);
-printf("\n");
-return;
-}
-for(i=0;i<r;i++) {
-L[k] = t[i];
-for(j=i+1, j1=0;j<r;j++, j1++) {
-t2[j1] = t[j];
-}
-combinaisons(n, p, k+1, L, t2, j1);
-}
-}
-
-void effectue(int n, int p) {
-        int L[p], t[n], i;
-        for(i=0;i<n;i++)
-                t[i] = i;
-        combinaisons(n, p, 0, L, t, n);
-}
-
-int main(int argc, char *argv[]) {
- int n, p;
-        if(argc<3) {
-                printf("usage : %s n p\n",argv[0]);
-                exit(1);
+void combinaisons(int n, int p, int k, int *L, int *t, int r)
+{
+    int i, j, j1, t2[n];
+    if(r<p-k) return;
+    
+    if(k==p)
+    {
+        for(i=0;i<p;i++) printf("%d ", L[i] + 1);
+        printf("\n");
+        return;
+    }
+    
+    for(i=0;i<r;i++)
+    {
+        L[k] = t[i];
+        for(j=i+1, j1=0;j<r;j++, j1++)
+        {
+            t2[j1] = t[j];
         }
-        n = atoi(argv[1]); // lecture des paramtres
-        p = atoi(argv[2]);
-        if(n<0 || p<0 || p>n) return 0;
-        effectue(n, p);
+        combinaisons(n, p, k+1, L, t2, j1);
+    }
+}
 
-        return 0;
+void effectue(int n, int p)
+{
+    int L[p], t[n], i;
+    for(i=0;i<n;i++)
+        t[i] = i;
+    combinaisons(n, p, 0, L, t, n);
+}
+
+int main(int argc, char *argv[])
+{
+    int n, p;
+    if(argc<3)
+    {
+        printf("usage : %s n p\n",argv[0]);
+        exit(1);
+    }
+    n = atoi(argv[1]); // lecture des paramtres
+    p = atoi(argv[2]);
+    if(n<0 || p<0 || p>n) return 0;
+    effectue(n, p);
+
+    return 0;
 }
 
