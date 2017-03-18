@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
     donnees data(source_file);
     auto combinaisons = data.generer_regroupements();
 
-    for(auto it = combinaisons.begin(); it != combinaisons.end(); ++it) cout << "\t" << *it << endl;
+    for(auto it = combinaisons.begin(); it != combinaisons.end(); ++it)
+        cout << "\t" << *it << endl;
+
+    cout << combinaisons.size() << " regroupements" << endl;
 
     chr.stop();
 
