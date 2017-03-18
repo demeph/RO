@@ -111,8 +111,6 @@ unsigned int donnees::distance( std::vector<unsigned int> lieux) const
 void donnees::init_distance(regroupement& rgrp) const
 {
     std::vector<unsigned int>& lieux(rgrp.lieux());
-    //std::sort(lieux.begin(), lieux.end());//on s'assure que lieux soit trié pour pouvoir parcourir toutes les permutations
-
     unsigned int min_dist = distance(lieux);
     unsigned int tmp_dist;
     while( std::next_permutation(lieux.begin(), lieux.end()) )
