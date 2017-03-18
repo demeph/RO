@@ -11,11 +11,16 @@ class regroupement
     void add(unsigned int point, unsigned int quantite);
 
     unsigned int quantite() const { return quantite_; }
-    const std::vector<unsigned >& lieux() const { return lieux_; }
+    const std::vector<unsigned int>& lieux() const { return lieux_; }
+    std::vector<unsigned int>& lieux() { return lieux_; }
+
+    unsigned int distance() const { return distance_; }
+    unsigned int & distance() { return distance_; }
 
   private:
     std::vector<unsigned int> lieux_;
     unsigned int quantite_;
+    unsigned int distance_;
 };
 
 std::ostream& operator<<(std::ostream& os, regroupement const& regr);

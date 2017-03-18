@@ -1,5 +1,6 @@
 #include "donnees.h"
 #include "container_overload.h"
+#include <algorithm>//next_permutation
 
 donnees::donnees(std::string file)
 {
@@ -62,7 +63,10 @@ std::vector<regroupement> donnees::generer_regroupements() const
     
     for(unsigned int i = 1; i < nblieux_; ++i)//generation des premiers regroupements; ceux ne comportant qu'un seul point
         if(capacite_ >= demande_[i])
+        {
             result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
+            init_distance(result.back());
+        }
 
     unsigned int start = 0;
     unsigned int stop = result.size();
@@ -77,16 +81,48 @@ std::vector<regroupement> donnees::generer_regroupements() const
                 {
                     result.push_back( result[start] );//on emplace back une copie de *start
                     result.back().add(i, demande_[i]);
+                    init_distance(result.back());
                 }
             }
         }
         
         start = stop;
         stop = result.size();
-        
     }
     
     return result;
+}
+
+unsigned int donnees::distance( std::vector<unsigned int> lieux) const
+{
+    unsigned int result = 0;
+    unsigned int previous = 0;
+
+    for( auto & current : lieux)
+    {
+        result += C_[previous][current];
+        previous = current;
+    }
+
+    result += C_[previous][0];
+    return result;
+}
+
+void donnees::init_distance(regroupement& rgrp) const
+{
+    std::vector<unsigned int>& lieux(rgrp.lieux());
+    //std::sort(lieux.begin(), lieux.end());//on s'assure que lieux soit trié pour pouvoir parcourir toutes les permutations
+
+    unsigned int min_dist = distance(lieux);
+    unsigned int tmp_dist;
+    while( std::next_permutation(lieux.begin(), lieux.end()) )
+    {
+        tmp_dist = distance(lieux);
+        if(tmp_dist < min_dist)
+            min_dist = tmp_dist;
+    }
+    rgrp.distance() = min_dist;
+    
 }
 
 std::ostream& operator<<(std::ostream& os, donnees const& datas)

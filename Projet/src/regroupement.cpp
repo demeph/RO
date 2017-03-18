@@ -28,8 +28,10 @@ std::ostream& operator<<(std::ostream& os, regroupement const& regr)
         os << "; " << *it;
     }
 
-    os << "], quantite : "
-       << regr.quantite();
+    os << "] quantite : "
+       << regr.quantite()
+       << " distance : "
+       << regr.distance();
         
     return os;
 }
