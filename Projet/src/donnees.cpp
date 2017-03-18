@@ -60,36 +60,29 @@ std::vector<regroupement> donnees::generer_regroupements() const
 
     std::cout << *this << std::endl;
     
-    for(unsigned int i = 0; i < nblieux_; ++i)
-        result.emplace_back( std::vector<unsigned int>{i} );
+    for(unsigned int i = 1; i < nblieux_; ++i)//generation des premiers regroupements; ceux ne comportant qu'un seul point
+        if(capacite_ >= demande_[i])
+            result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
 
-    for(auto it = result.begin(); it != result.end(); ++it)
-        std::cout << *it << std::endl;
-
-
-
-    auto start = result.begin();
-    auto stop = result.end();
-    auto last = std::prev(stop);
+    unsigned int start = 0;
+    unsigned int stop = result.size();
     
     for(unsigned int stage = 2; stage < nblieux_; ++stage)
     {
-        std::cout << "damn" << std::endl;
-//        std::cout << *start << std::endl;
-        for(; start != stop; ++start)//parcours de chacun des points générés à l'étape précédente
+        for(; start < stop; ++start)//parcours de chacun des points générés à l'étape précédente
         {
-            for(unsigned int i = start->lieux().back() + 1; i < nblieux_; ++i)
+            for(unsigned int i = result[start].lieux().back() + 1; i < nblieux_; ++i)
             {
-                std::cout << "\t" << i;
-                std::cout.flush();
-                result.emplace_back( start->lieux() );//on emplace back une copie de *start
-                result.back().add(i);
+                if(result[start].quantite() + demande_[i] <= capacite_)
+                {
+                    result.push_back( result[start] );//on emplace back une copie de *start
+                    result.back().add(i, demande_[i]);
+                }
             }
         }
         
-        start = std::next(last);
-        stop = result.end();
-        last = std::prev(stop);
+        start = stop;
+        stop = result.size();
         
     }
     

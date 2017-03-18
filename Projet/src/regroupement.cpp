@@ -1,18 +1,20 @@
 #include "regroupement.h"
 
-regroupement::regroupement(std::vector<unsigned int> lieux):
-    lieux_(lieux)
+regroupement::regroupement(std::vector<unsigned int> lieux, unsigned int quantite):
+    lieux_(lieux),
+    quantite_(quantite)
 {}
 
-void regroupement::add(unsigned int point)
+void regroupement::add(unsigned int point, unsigned int quantite)
 {
     lieux_.push_back(point);
+    quantite_+=quantite;
 }
 
 std::ostream& operator<<(std::ostream& os, regroupement const& regr)
 {
     
-    os << "regroupement : [";
+    os << "lieux : [";
     auto it = regr.lieux().begin();
     auto end = regr.lieux().end();
     if(it != end)
@@ -26,7 +28,8 @@ std::ostream& operator<<(std::ostream& os, regroupement const& regr)
         os << "; " << *it;
     }
 
-    os << "]";
+    os << "], quantite : "
+       << regr.quantite();
         
     return os;
 }

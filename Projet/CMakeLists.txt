@@ -14,7 +14,8 @@ add_executable(
   ro_test.cpp
   src/regroupement.cpp
   src/donnees.cpp
+  src/chrono.cpp
 )
 
-file(INSTALL full_valgrind DESTINATION full_valgrind)
-file(INSTALL VRPA6.dat DESTINATION VRPA6.dat)
+file(INSTALL full_valgrind DESTINATION . )
+file(INSTALL data DESTINATION . )
