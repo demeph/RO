@@ -36,7 +36,7 @@ class glpkwrapper
     int *ia;
     int *ja;
     double *ar;
-    const double droite_;
+    const int droite_;
     int nb_creux_;
 
     glp_prob *trumpland;

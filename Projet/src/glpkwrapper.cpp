@@ -3,7 +3,7 @@
 glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
     nb_contr_(nbContr-1),
     nb_var_(prob.regroupements().size()),
-    droite_(1.0),
+    droite_(1),
     nb_creux_(0)
 {
     couts = new int[nb_var_+1];
@@ -22,6 +22,7 @@ glpkwrapper::~glpkwrapper()
     delete[] ja;
     delete[] ar;
     delete[] couts;
+    glp_delete_prob(trumpland);
 }
 
 void glpkwrapper::construit_couts(const std::vector<regroupement> & combinaison)
@@ -41,11 +42,12 @@ void glpkwrapper::construit_taille_contr(probleme prob)
 	ar = new double[1+nb_creux_];
 	for (unsigned int i = 0; i < nb_contr_; ++i)
 	{		
+		std::cout<< "\t"<<(prob.regroupements_contenant()[i].size()+1)<< "\n";
 		for (unsigned int j = 0; j < prob.regroupements_contenant()[i].size(); ++j)
 		{
 			ia[pos] = i+1;
-			ja[pos] = prob.regroupements_contenant()[i][j];
-			ar[pos] = droite_;
+			ja[pos] = (prob.regroupements_contenant()[i][j]+1);			
+			ar[pos] = 1.0;
 			++pos;
 		}
 	}
@@ -55,22 +57,21 @@ void glpkwrapper::def_probleme()
 {
 	// definit contrainte
     glp_add_rows(trumpland, nb_contr_); 
-	for (unsigned int i = 0; i < nb_contr_; ++i)
+
+	for (unsigned int i = 1; i <= nb_contr_; ++i)
 	{
 		
 		/* partie indispensable : les bornes sur les contraintes */
-		glp_set_row_bnds(trumpland, i+1, GLP_FX, droite_, 0.0); 
+		glp_set_row_bnds(trumpland, i, GLP_FX, droite_, 0.0); 
 	}
 
 	glp_add_cols(trumpland,nb_var_);
 
-	for(unsigned i=1;i <= nb_var_;++i)
+	for(unsigned int i=1;i<=nb_var_;++i)
 	{
-		/* partie obligatoire : bornes éventuelles sur les variables, et type */
-		glp_set_col_bnds(trumpland, i, GLP_DB, 0.0, 1.0); /* bornes sur les variables, comme sur les contraintes */
-		glp_set_col_kind(trumpland, i, GLP_BV);	/* les variables sont par défaut continues, nous précisons ici qu'elles sont binaires avec la constante GLP_BV, on utiliserait GLP_IV pour des variables entières */	
-	} 
-
+		glp_set_col_bnds(trumpland, i, GLP_DB, 0.0, 1.0);
+		glp_set_col_kind(trumpland, i, GLP_BV);
+	}  
 	for(unsigned i = 1;i <= nb_var_;++i) glp_set_obj_coef(trumpland,i,couts[i - 1]);  
 
 	glp_load_matrix(trumpland,nb_creux_,ia,ja,ar); 
@@ -79,8 +80,8 @@ void glpkwrapper::def_probleme()
 void glpkwrapper::resoudre_probleme()
 {
 	def_probleme();
+	glp_write_lp(trumpland,NULL,"trumpland.lp");
 	glp_simplex(trumpland,NULL);	
-    glp_write_lp(trumpland,NULL,"trumpland.lp");
 	glp_intopt(trumpland,NULL);
 	double z = glp_mip_obj_val(trumpland);
 	std::cout << "Z = " << z << "\n";
