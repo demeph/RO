@@ -55,42 +55,42 @@ donnees::~donnees()
 	free(demande_);	
 }
 
-std::vector<regroupement> donnees::generer_regroupements() const
+probleme donnees::generer_probleme() const
 {
-    std::vector<regroupement> result;
+    std::vector<regroupement> rgrps;
 
     std::cout << *this << std::endl;
     
     for(unsigned int i = 1; i < nblieux_; ++i)//generation des premiers regroupements; ceux ne comportant qu'un seul point
         if(capacite_ >= demande_[i])
         {
-            result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
-            init_distance(result.back());
+            rgrps.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
+            init_distance(rgrps.back());
         }
 
     unsigned int start = 0;
-    unsigned int stop = result.size();
+    unsigned int stop = rgrps.size();
     
     for(unsigned int stage = 2; stage < nblieux_; ++stage)
     {
         for(; start < stop; ++start)//parcours de chacun des points générés à l'étape précédente
         {
-            for(unsigned int i = result[start].lieux().back() + 1; i < nblieux_; ++i)
+            for(unsigned int i = rgrps[start].lieux().back() + 1; i < nblieux_; ++i)
             {
-                if(result[start].quantite() + demande_[i] <= capacite_)
+                if(rgrps[start].quantite() + demande_[i] <= capacite_)
                 {
-                    result.push_back( result[start] );//on emplace back une copie de *start
-                    result.back().add(i, demande_[i]);
-                    init_distance(result.back());
+                    rgrps.push_back( rgrps[start] );//on emplace back une copie de *start
+                    rgrps.back().add(i, demande_[i]);
+                    init_distance(rgrps.back());
                 }
             }
         }
         
         start = stop;
-        stop = result.size();
+        stop = rgrps.size();
     }
     
-    return result;
+    return probleme(std::move(rgrps), nblieux_);
 }
 
 unsigned int donnees::distance( std::vector<unsigned int> lieux) const

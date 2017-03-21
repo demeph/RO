@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "regroupement.h"
+#include "probleme.h"
 
 #include <string>
 #include <iostream>
@@ -14,12 +15,12 @@ class donnees
   public:
     donnees(std::string file);
     ~donnees();
-    std::vector<regroupement> generer_regroupements() const;
+    probleme generer_probleme() const;
     unsigned int distance( std::vector<unsigned int> lieux ) const;
     unsigned int nblieux() const { return nblieux_; }
     unsigned int capacite() const { return capacite_; }
     unsigned int distancier(unsigned int x,unsigned int y) const {return C_[x][y];}
-    unsigned int demande(unsigned int x) const {return demande[x];}
+    unsigned int demande(unsigned int x) const {return demande_[x];}
 
   private:
     void init_distance(regroupement& rgrp) const;

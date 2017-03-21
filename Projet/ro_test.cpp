@@ -15,7 +15,8 @@ int main(int argc, char *argv[])
     chr.start();
     
     donnees data(source_file);
-    auto combinaisons = data.generer_regroupements();
+    auto le_probleme = data.generer_probleme();
+    std::vector<regroupement> combinaisons = le_probleme.regroupements();
 
     unsigned int threshold = 100;
     if(combinaisons.size() < threshold)
@@ -42,16 +43,23 @@ int main(int argc, char *argv[])
     }
 
 
-    cout << combinaisons.size() << " regroupements" << endl;
+    // cout << combinaisons.size() << " regroupements" << endl;
 
-    glp_prob *trumpland;
-    int *ia;
-    int *ja;
-    double *ar;
+    // for(unsigned int i = 1; i < le_probleme.regroupements_contenant().size(); ++i)
+    // {        
+    //     cout << "le point " << i << " est contenu dans :" << endl;
+    //     for(auto & el: le_probleme.regroupements_contenant()[i])
+    //         cout << "\t" << el << endl;
+    // }
 
-    trumpland = glp_create_prob()
-    glp_set_prob_name(trumpland,"Probleme de trumpland");
-    glp_set_obj_dir(prob,GLP_MIN);
+// glp_prob *trumpland;
+    // int *ia;
+    // int *ja;
+    // double *ar;
+
+    // trumpland = glp_create_prob()
+    // glp_set_prob_name(trumpland,"Probleme de trumpland");
+    // glp_set_obj_dir(prob,GLP_MIN);
 
     
 
