@@ -13,7 +13,6 @@ glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
 	trumpland = glp_create_prob();
     glp_set_prob_name(trumpland,"Probleme de trumpland");
     glp_set_obj_dir(trumpland,GLP_MIN);
-    
 }
 
 glpkwrapper::~glpkwrapper()
@@ -41,12 +40,11 @@ void glpkwrapper::construit_taille_contr(probleme prob)
 	ja = new int[1+nb_creux_];
 	ar = new double[1+nb_creux_];
 	for (unsigned int i = 0; i < nb_contr_; ++i)
-	{		
-		std::cout<< "\t"<<(prob.regroupements_contenant()[i].size()+1)<< "\n";
+	{
 		for (unsigned int j = 0; j < prob.regroupements_contenant()[i].size(); ++j)
 		{
 			ia[pos] = i+1;
-			ja[pos] = (prob.regroupements_contenant()[i][j]+1);			
+			ja[pos] = (prob.regroupements_contenant()[i][j]+1);
 			ar[pos] = 1.0;
 			++pos;
 		}
@@ -83,8 +81,20 @@ void glpkwrapper::resoudre_probleme()
 	glp_write_lp(trumpland,NULL,"trumpland.lp");
 	glp_simplex(trumpland,NULL);	
 	glp_intopt(trumpland,NULL);
-	double z = glp_mip_obj_val(trumpland);
-	std::cout << "Z = " << z << "\n";
+	afficher();
+}
+
+void glpkwrapper::afficher()
+{
+    double * x = new double(nb_var_);
+    for (unsigned i = 0; i< nb_var_; ++i) x[i] = glp_mip_col_val(trumpland,i+1);
+    std::cout << "\tLa valeur optimale Z* = " << glp_mip_obj_val(trumpland);
+    std::cout << "\n\tLes valeurs de notre variable de decision :\n";
+    for (unsigned i = 0; i< nb_var_; ++i)
+    {
+       std::cout << "\t x*_"<< (i+1) << " = " << (int)(x[i]+0.5)<<"\n";
+    }
+    delete[] x;
 }
 
 std::ostream & operator<<(std::ostream& os, glpkwrapper const& wrp)

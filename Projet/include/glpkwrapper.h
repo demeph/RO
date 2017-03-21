@@ -20,7 +20,7 @@ class glpkwrapper
     unsigned int nb_contr() const { return nb_contr_; }
     unsigned int nb_var() const { return nb_var_; }
     unsigned int nb_creux() const { return nb_creux_; }
-
+    void afficher();
   private:
     // fonctions privées
     void construit_couts(const std::vector<regroupement> & combinaison);
