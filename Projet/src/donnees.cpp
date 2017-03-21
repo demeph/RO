@@ -89,7 +89,7 @@ probleme donnees::generer_probleme() const
         start = stop;
         stop = rgrps.size();
     }
-    probleme result(std::move(rgrps), nblieux_);
+    probleme result(std::move(rgrps), nblieux_-1);
     return result;
 }
 

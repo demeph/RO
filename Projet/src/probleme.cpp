@@ -14,7 +14,7 @@ void probleme::init_regroupements_contenant()
     {
         for(unsigned int el: regroupements_[i].lieux())
         {
-            regroupements_contenant_[el].push_back(i);
+            regroupements_contenant_[el-1].push_back(i);
         }
     }
 }
