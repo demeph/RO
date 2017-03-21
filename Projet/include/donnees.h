@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glpk.h> /* Nous allons utiliser la bibliothèque de fonctions de GLPK */
 #include "regroupement.h"
 
 #include <string>
@@ -19,6 +18,8 @@ class donnees
     unsigned int distance( std::vector<unsigned int> lieux ) const;
     unsigned int nblieux() const { return nblieux_; }
     unsigned int capacite() const { return capacite_; }
+    unsigned int distancier(unsigned int x,unsigned int y) const {return C_[x][y];}
+    unsigned int demande(unsigned int x) const {return demande[x];}
 
   private:
     void init_distance(regroupement& rgrp) const;
