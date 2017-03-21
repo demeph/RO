@@ -1,10 +1,12 @@
 #include "glpkwrapper.h"
+#include "container_overload.h"
 
 glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
     nb_contr_(nbContr-1),
     nb_var_(prob.regroupements().size()),
     droite_(1),
-    nb_creux_(0)
+    nb_creux_(0),
+    probleme_(prob)
 {
     couts = new int[nb_var_+1];
 	construit_couts(prob.regroupements());
@@ -86,11 +88,14 @@ void glpkwrapper::resoudre_probleme()
 
 void glpkwrapper::afficher()
 {
-    std::cout << "\tvaleur optimale de la fonction objective Z* = " << glp_mip_obj_val(trumpland);
-    std::cout << "\n\tvaleurs des variables de decision :\n";
+    std::cout << "\tvaleur optimale de la fonction objective Z* = " << glp_mip_obj_val(trumpland) << std::endl;
+    //std::cout << "\n\tvaleurs des variables de decision :\n";
+    std::cout << std::endl << "tournees selectionnees" << std::endl;
     for (unsigned i = 0; i< nb_var_; ++i)
     {
-        std::cout << "\tx_" << i+1 << "* = " << glp_mip_col_val(trumpland, i+1) << "\n";
+        //std::cout << "\tx_" << i+1 << "* = " << glp_mip_col_val(trumpland, i+1) << "\n";
+        if(glp_mip_col_val(trumpland, i+1))
+            std::cout << "\t" << probleme_.regroupements()[i].lieux() << std::endl;
     }
 }
 

@@ -40,6 +40,7 @@ class glpkwrapper
     int nb_creux_;
 
     glp_prob *trumpland;
+    const probleme& probleme_;
 };
 
 std::ostream & operator<<(std::ostream& os, glpkwrapper const& wrp);
