@@ -89,8 +89,8 @@ probleme donnees::generer_probleme() const
         start = stop;
         stop = rgrps.size();
     }
-    
-    return probleme(std::move(rgrps), nblieux_);
+    probleme result(std::move(rgrps), nblieux_);
+    return result;
 }
 
 unsigned int donnees::distance( std::vector<unsigned int> lieux) const
