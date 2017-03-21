@@ -86,15 +86,12 @@ void glpkwrapper::resoudre_probleme()
 
 void glpkwrapper::afficher()
 {
-    double * x = new double(nb_var_);
-    for (unsigned i = 0; i< nb_var_; ++i) x[i] = glp_mip_col_val(trumpland,i+1);
-    std::cout << "\tLa valeur optimale Z* = " << glp_mip_obj_val(trumpland);
-    std::cout << "\n\tLes valeurs de notre variable de decision :\n";
+    std::cout << "\tvaleur optimale de la fonction objective Z* = " << glp_mip_obj_val(trumpland);
+    std::cout << "\n\tvaleurs des variables de decision :\n";
     for (unsigned i = 0; i< nb_var_; ++i)
     {
-       std::cout << "\t x*_"<< (i+1) << " = " << (int)(x[i]+0.5)<<"\n";
+        std::cout << "\tx_" << i+1 << "* = " << glp_mip_col_val(trumpland, i+1) << "\n";
     }
-    delete[] x;
 }
 
 std::ostream & operator<<(std::ostream& os, glpkwrapper const& wrp)
