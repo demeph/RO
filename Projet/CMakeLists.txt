@@ -17,6 +17,7 @@ add_executable(
   src/donnees.cpp
   src/chrono.cpp
   src/probleme.cpp
+  src/glpkwrapper.cpp
 )
 
 file(INSTALL full_valgrind DESTINATION . )

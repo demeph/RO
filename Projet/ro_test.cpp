@@ -3,7 +3,8 @@
 #include "donnees.h"
 #include "chrono.h"
 #include "container_overload.h"
-#include <glpk.h> /* Nous allons utiliser la bibliothèque de fonctions de GLPK */
+#include "glpkwrapper.h"
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -43,23 +44,9 @@ int main(int argc, char *argv[])
     }
 
 
-    // cout << combinaisons.size() << " regroupements" << endl;
+    glpkwrapper glpk(data.nblieux(),le_probleme);
 
-    // for(unsigned int i = 1; i < le_probleme.regroupements_contenant().size(); ++i)
-    // {        
-    //     cout << "le point " << i << " est contenu dans :" << endl;
-    //     for(auto & el: le_probleme.regroupements_contenant()[i])
-    //         cout << "\t" << el << endl;
-    // }
-
-// glp_prob *trumpland;
-    // int *ia;
-    // int *ja;
-    // double *ar;
-
-    // trumpland = glp_create_prob()
-    // glp_set_prob_name(trumpland,"Probleme de trumpland");
-    // glp_set_obj_dir(prob,GLP_MIN);
+    glpk.resoudre_probleme();
 
     
 
