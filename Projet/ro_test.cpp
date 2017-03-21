@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
 
     glpkwrapper glpk(data.nblieux(),le_probleme);
-
+    cout << "wrapper :\n" << glpk << endl;
     glpk.resoudre_probleme();
 
     
