@@ -88,9 +88,9 @@ void glpkwrapper::resoudre_probleme()
 
 void glpkwrapper::afficher()
 {
-    std::cout << "\tvaleur optimale de la fonction objective Z* = " << glp_mip_obj_val(trumpland) << std::endl;
+    std::cout << "valeur optimale de la fonction objective :\n\tZ* = " << glp_mip_obj_val(trumpland) << std::endl;
     //std::cout << "\n\tvaleurs des variables de decision :\n";
-    std::cout << std::endl << "tournees selectionnees" << std::endl;
+    std::cout << std::endl << "tournees selectionnees :" << std::endl;
     for (unsigned i = 0; i< nb_var_; ++i)
     {
         //std::cout << "\tx_" << i+1 << "* = " << glp_mip_col_val(trumpland, i+1) << "\n";

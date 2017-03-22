@@ -1,4 +1,5 @@
 #include "regroupement.h"
+#include <algorithm>
 
 regroupement::regroupement(std::vector<unsigned int> lieux, unsigned int quantite):
     lieux_(lieux),
@@ -13,7 +14,7 @@ void regroupement::add(unsigned int point, unsigned int quantite)
 
 unsigned int regroupement::dernier_point() const
 {
-    return lieux_.back();
+    return *std::max_element(lieux_.begin(), lieux_.end());
 }
 
 std::ostream& operator<<(std::ostream& os, regroupement const& regr)

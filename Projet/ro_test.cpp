@@ -19,29 +19,29 @@ int main(int argc, char *argv[])
     auto le_probleme = data.generer_probleme();
     std::vector<regroupement> combinaisons = le_probleme.regroupements();
 
-    unsigned int threshold = 100;
-    if(combinaisons.size() < threshold)
-        for(auto it = combinaisons.begin(); it != combinaisons.end(); ++it)
-            cout << "\t" << *it << endl;
-    else
-    {
-        unsigned int mid = threshold/2;
-        cout << "il y a plus de "
-             << threshold
-             << " elements. affichage des "
-             << mid
-             << " premiers et des "
-             << mid
-             << " derniers"
-             << "\n" << endl;
-        for(auto it = combinaisons.begin(); it != combinaisons.begin() + mid +1; ++it)
-            cout << "\t" << *it << endl;
-        cout << endl;
+    // unsigned int threshold = 100;
+    // if(combinaisons.size() < threshold)
+    //     for(auto it = combinaisons.begin(); it != combinaisons.end(); ++it)
+    //         cout << "\t" << *it << endl;
+    // else
+    // {
+    //     unsigned int mid = threshold/2;
+    //     cout << "il y a plus de "
+    //          << threshold
+    //          << " elements. affichage des "
+    //          << mid
+    //          << " premiers et des "
+    //          << mid
+    //          << " derniers"
+    //          << "\n" << endl;
+    //     for(auto it = combinaisons.begin(); it != combinaisons.begin() + mid +1; ++it)
+    //         cout << "\t" << *it << endl;
+    //     cout << endl;
         
-        for(auto it = combinaisons.end() -(mid +1) ; it != combinaisons.end(); ++it)
-            cout << "\t" << *it << endl;
+    //     for(auto it = combinaisons.end() -(mid +1) ; it != combinaisons.end(); ++it)
+    //         cout << "\t" << *it << endl;
 
-    }
+    // }
 
 
     glpkwrapper glpk(data.nblieux(),le_probleme);
