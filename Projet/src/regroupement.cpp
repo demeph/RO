@@ -11,6 +11,11 @@ void regroupement::add(unsigned int point, unsigned int quantite)
     quantite_+=quantite;
 }
 
+unsigned int regroupement::dernier_point() const
+{
+    return lieux_.back();
+}
+
 std::ostream& operator<<(std::ostream& os, regroupement const& regr)
 {
     

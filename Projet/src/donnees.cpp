@@ -57,37 +57,37 @@ donnees::~donnees()
 
 probleme donnees::generer_probleme() const
 {
-    std::vector<regroupement> rgrps;
+    std::vector<regroupement> regroupements;
 
-    for(unsigned int i = 1; i < nblieux_; ++i)//generation des premiers regroupements; ceux ne comportant qu'un seul point
-        if(capacite_ >= demande_[i])
+    for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompage
+        if(capacite_ >= demande_[i])//on teste quand même la capacité
         {
-            rgrps.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
-            init_distance(rgrps.back());
+            regroupements.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
+            init_distance(regroupements.back());
         }
 
     unsigned int start = 0;
-    unsigned int stop = rgrps.size();
+    unsigned int stop = regroupements.size();
     
-    for(unsigned int stage = 2; stage < nblieux_; ++stage)
+    for(unsigned int stage = 2; stage < nblieux_; ++stage)//génération des sous-ensembles de taille stage
     {
-        for(; start < stop; ++start)//parcours de chacun des points générés à l'étape précédente
+        for(; start < stop; ++start)//parcours de chacun des points de taille stage-1
         {
-            for(unsigned int i = rgrps[start].lieux().back() + 1; i < nblieux_; ++i)
+            for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
             {
-                if(rgrps[start].quantite() + demande_[i] <= capacite_)
+                if(regroupements[start].quantite() + demande_[i] <= capacite_)
                 {
-                    rgrps.push_back( rgrps[start] );//on emplace back une copie de *start
-                    rgrps.back().add(i, demande_[i]);
-                    init_distance(rgrps.back());
+                    regroupements.push_back( regroupements[start] );//on emplace back une copie de *start
+                    regroupements.back().add(i, demande_[i]);
+                    init_distance(regroupements.back());
                 }
             }
         }
         
         start = stop;
-        stop = rgrps.size();
+        stop = regroupements.size();
     }
-    probleme result(std::move(rgrps), nblieux_-1);
+    probleme result(std::move(regroupements), nblieux_-1);
     return result;
 }
 

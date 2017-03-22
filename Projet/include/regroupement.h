@@ -16,6 +16,7 @@ class regroupement
 
     unsigned int distance() const { return distance_; }
     unsigned int & distance() { return distance_; }
+    unsigned int dernier_point() const;
 
   private:
     std::vector<unsigned int> lieux_;
