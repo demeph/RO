@@ -59,8 +59,6 @@ probleme donnees::generer_probleme() const
 {
     std::vector<regroupement> rgrps;
 
-    std::cout << *this << std::endl;
-    
     for(unsigned int i = 1; i < nblieux_; ++i)//generation des premiers regroupements; ceux ne comportant qu'un seul point
         if(capacite_ >= demande_[i])
         {
