@@ -186,9 +186,23 @@ int main(int argc, char *argv[])
 	/* .... */
 
 
+	int nbElt = pow(2,N)-1;
+	std::vector<regroupLong> liste;	
 
+	genereSSensemble(liste);
 
-
+	liste = filterListe(liste);
+	
+	for (int cpt = 0;cpt < liste.size();++cpt)
+	{
+		int l = liste[cpt].regroupe.size();
+		int m = 0;
+		for ( m = 0; m < l;++m)
+		{
+			std::cout << liste[cpt].regroupe[m] << " ";
+		}
+		std::cout << "\n";
+	}
 
 
 
