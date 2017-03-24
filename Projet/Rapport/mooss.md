@@ -10,22 +10,22 @@ On pose $p$ le nombre de points de pompage.
 
 
 1. Initialisation :
-La première étape consiste simplement à générer les tournées ne contenant qu'un seul point de pompage.
-On se retrouve donc avec $p$ vecteurs de taille 1.
+   La première étape consiste simplement à générer les tournées ne contenant qu'un seul point de pompage.
+   On se retrouve donc avec $p$ vecteurs de taille 1.
 
 
 2. boucle principale
    1. genération
-On remarque que les regroupements de tailles t sont des préfixes des regroupements de taille t+1.
-On se sert de cette propriété pour construire inductivement l'ensemble des regroupements.
-Soit $r$ un regroupement de taille t.
+      On remarque que les regroupements de tailles t sont des préfixes des regroupements de taille t+1.
+      On se sert de cette propriété pour construire inductivement l'ensemble des regroupements.
+      Soit $r$ un regroupement de taille t.
 
 On construit $S_r$, l'ensembke des regroupements de taille $t+1$ et de préfixe $r$
-    $S_r \leftarrow \{\}$
-    $$
-        \forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space S_r\space \cup\space \{\space r\space \cup\space \{i\}\}
-    $$
-    
+
+$S_r \leftarrow \{\}$
+$$
+\forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space S_r\space \cup\space \{\space r\space \cup\space \{i\}\}
+$$
 On applique ce procédé à tous les regroupements de taille $t$ pour construire tous les regroupements de tailles $t+1$.
 
 On peut ainsi construire tous les regroupements nous intéressant à partir des regroupements de taille 1.
@@ -34,13 +34,13 @@ On remarque que cet algorithme génère tous les regroupements, même ceux compo
 On peut résoudre ce problème en testant si la quantité d'eau de la tournée dépasse la capacité du drone avant d'ajouter l'instance à la solution partielle.
 L'avantage de cette approche est que les solutions correspondant à une trop grande quantité d'eau ne sont pas envisagées, économisant ainsi du temps de calcul.
 
-    $S_r \leftarrow \{\}$
-    $$
-        \forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space
-        \begin{cases} S_r\space \cup\space \{\space r\space \cup\space \{i\}\} si \sum {j \in r} d_j  + d_i \leq Ca
-        \\ S_r sinon
-    $$
-    
+$S_r \leftarrow \{\}$
+$$
+\forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space
+\begin{cases} S_r\space \cup\space \{\space r\space \cup\space \{i\}\} si \space \sum_{j \in r} d_j  + d_i \leq Ca
+\\ S_r \space sinon \end{cases}
+$$
+
 #### Implantation en c++
 
 Pour cela, nous avons créé une classe regroupement représentant un ensemble de points de pompage.
