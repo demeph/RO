@@ -5,53 +5,51 @@ Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est 
 
 #### Explication de l'algorithme
 
-On utilise les notations suivantes, extraites du sujet :
-$n \in \mathbb{N}$, le nombre de lieux
-$d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
-$Ca \in \mathbb{N}$, la capacité du drone
+Nous utiliserons les notations suivantes, extraites du sujet :
+- $n \in \mathbb{N}$, le nombre de lieux
+- $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
+- $Ca \in \mathbb{N}$, la capacité du drone
 
 
 Le principe utilisé ici est de générer les regroupements de taille 1 et de s'en servir pour générer ceux de taille 2 puis ceux de taille 3, et ainsi de suite.
 
-On pose $p$ le nombre de points de pompage.
+Posons $p$ le nombre de points de pompage ( $p = n-1$ ).
+
+Un regroupement r est dit réalisable si $\sum_{i \in r} d_i \leq Ca$
 
 
-1. Initialisation :
-   La première étape consiste simplement à générer les tournées ne contenant qu'un seul point de pompage.
-   On se retrouve donc avec $p$ vecteurs de taille 1.
+##### Initialisation
+La première étape consiste simplement à générer les tournées ne contenant qu'un seul point de pompage.
+On se retrouve donc avec $p$ vecteurs de taille 1.
 
 
-2. boucle principale
-   1. genération
-      On remarque que les regroupements de tailles t sont des préfixes des regroupements de taille t+1.
-      On se sert de cette propriété pour construire inductivement l'ensemble des regroupements.
-      Soit $r$ un regroupement de taille t.
+##### Hérédité
+###### genération
+On remarque que les regroupements de taille $t$ sont des préfixes des regroupements de taille $t+1$.
+On se sert de cette propriété pour construire l'ensemble des regroupements.
 
-On construit $S_r$, l'ensembke des regroupements de taille $t+1$ et de préfixe $r$
+Soit $r$ un regroupement de taille $t$.
+On construit $S_r$, l'ensemble des regroupements de taille $t+1$ et de préfixe $r$ comme suit :
 
 $S_r \leftarrow \{\}$
-$$
-\forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space S_r\space \cup\space \{\space r\space \cup\space \{i\}\}
-$$
+$$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space],\space S_r\space \leftarrow\space S_r\space \cup\space \{\space r\space \cup\space \{i\}\}$$
 
 On applique ce procédé à tous les regroupements de taille $t$ pour construire tous les regroupements de tailles $t+1$.
+On peut ainsi construire tous les regroupements de taille allant de $1$ à $n$ à partir des regroupements de taille $1$.
+###### filtrage
+On remarque que cet algorithme génère tous les regroupements, même ceux non réalisables.
+On peut résoudre ce problème en testant si l'instance est réalisable avant de l'ajouter à la solution partielle.
+L'avantage de cette approche est que les regroupements ayant un préfixe non réalisable ne sont pas envisagés, économisant ainsi du temps de calcul.
 
-On peut ainsi construire tous les regroupements nous intéressant à partir des regroupements de taille 1.
-    2. filtrage
-On remarque que cet algorithme génère tous les regroupements, même ceux comportant une trop grande quantité d'eau.
-On peut résoudre ce problème en testant si la quantité d'eau de la tournée dépasse la capacité du drone avant d'ajouter l'instance à la solution partielle.
-L'avantage de cette approche est que les solutions correspondant à une trop grande quantité d'eau ne sont pas envisagées, économisant ainsi du temps de calcul.
+Soit $r$ un regroupement de taille $t$.
+On construit $R_r$, l'ensemble des regroupements réalisables de taille $t+1$ et de préfixe $r$ comme suit :
 
 $S_r \leftarrow \{\}$
-$$
-\forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space
-\begin{cases} S_r\space \cup\space \{\space r\space \cup\space \{i\}\} si \space \sum_{j \in r} d_j  + d_i \leq Ca
-\\ S_r \space sinon \end{cases}
-$$
+$$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space ],\space S_r\space \leftarrow\space \begin{cases} S_r\space \cup\space \{r\space \cup\space \{i\}\} \space si \space (\sum_{j \in r} d_j)  + d_i \leq Ca \\ S_r \space sinon \end{cases}$$
 
 #### Implantation en c++
 
-1. Initialisation
+##### Initialisation
 
 ```c++
 std::vector<regroupement> regroupements;
@@ -63,7 +61,7 @@ for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompa
     }
 ```
 
-2. Boucle principale
+##### Hérédité
 
 ```c++
 unsigned int start = 0;
@@ -76,7 +74,7 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
         for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
         {//création des regroupements de préfixe regroupements[start]
             if(regroupements[start].quantite() + demande_[i] <= capacite_)
-            {//filtrage. seuls les regroupements dont la quantité d'eau est transportable sont ajoutés
+            {//filtrage. seuls les regroupements réalisables sont ajoutés
                 regroupements.push_back( regroupements[start] );
                 //le nouveau regroupement est une copie de regroupements[start] ...
                 regroupements.back().add(i, demande_[i]);
