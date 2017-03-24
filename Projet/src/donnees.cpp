@@ -69,17 +69,20 @@ probleme donnees::generer_probleme() const
     unsigned int start = 0;
     unsigned int stop = regroupements.size();
     
-    for(unsigned int stage = 2; stage < nblieux_; ++stage)//génération des sous-ensembles de taille stage
-    {
-        for(; start < stop; ++start)//parcours de chacun des points de taille stage-1
-        {
+    for(unsigned int stage = 2; stage < nblieux_; ++stage)
+    {//génération des sous-ensembles de taille stage
+        for(; start < stop; ++start)
+        {//parcours de chacun des points de taille stage-1
             for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
-            {
+            {//création des regroupements de préfixe regroupements[start]
                 if(regroupements[start].quantite() + demande_[i] <= capacite_)
-                {
-                    regroupements.push_back( regroupements[start] );//on emplace back une copie de *start
+                {//filtrage. seuls les regroupements dont la quantité d'eau est transportable sont ajoutés
+                    regroupements.push_back( regroupements[start] );
+                    //le nouveau regroupement est une copie de regroupements[start] ...
                     regroupements.back().add(i, demande_[i]);
+                    // ... auquel on ajoute le point i et la quantité d'eau correspondante
                     init_distance(regroupements.back());
+                    //on calcule le chemin le plus court du regroupement créé
                 }
             }
         }

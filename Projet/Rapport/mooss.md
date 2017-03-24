@@ -4,6 +4,13 @@ Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est 
 
 
 #### Explication de l'algorithme
+
+On utilise les notations suivantes, extraites du sujet :
+$n \in \mathbb{N}$, le nombre de lieux
+$d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
+$Ca \in \mathbb{N}$, la capacité du drone
+
+
 Le principe utilisé ici est de générer les regroupements de taille 1 et de s'en servir pour générer ceux de taille 2 puis ceux de taille 3, et ainsi de suite.
 
 On pose $p$ le nombre de points de pompage.
@@ -26,6 +33,7 @@ $S_r \leftarrow \{\}$
 $$
 \forall\space i\space \in\space [max(r)+1,\space ...,\space p],\space S_r\space \leftarrow\space S_r\space \cup\space \{\space r\space \cup\space \{i\}\}
 $$
+
 On applique ce procédé à tous les regroupements de taille $t$ pour construire tous les regroupements de tailles $t+1$.
 
 On peut ainsi construire tous les regroupements nous intéressant à partir des regroupements de taille 1.
@@ -43,7 +51,7 @@ $$
 
 #### Implantation en c++
 
-Pour cela, nous avons créé une classe regroupement représentant un ensemble de points de pompage.
+1. Initialisation
 
 ```c++
 std::vector<regroupement> regroupements;
@@ -55,4 +63,33 @@ for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompa
     }
 ```
 
-La fonction init_distance sera expliquée plus tard.
+2. Boucle principale
+
+```c++
+unsigned int start = 0;
+unsigned int stop = regroupements.size();
+
+for(unsigned int stage = 2; stage < nblieux_; ++stage)
+{//génération des sous-ensembles de taille stage
+    for(; start < stop; ++start)
+    {//parcours de chacun des points de taille stage-1
+        for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
+        {//création des regroupements de préfixe regroupements[start]
+            if(regroupements[start].quantite() + demande_[i] <= capacite_)
+            {//filtrage. seuls les regroupements dont la quantité d'eau est transportable sont ajoutés
+                regroupements.push_back( regroupements[start] );
+                //le nouveau regroupement est une copie de regroupements[start] ...
+                regroupements.back().add(i, demande_[i]);
+                // ... auquel on ajoute le point i et la quantité d'eau correspondante
+                init_distance(regroupements.back());
+                //on calcule le chemin le plus court du regroupement créé
+            }
+        }
+    }
+
+    start = stop;
+    stop = regroupements.size();
+}
+```
+
+La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante
