@@ -1,10 +1,12 @@
 ## Ecriture de probleme en GLPK
 
+## Programme Linéaire
+
 Posons tout d'abord cette problème sous la forme d'un  probleme linaire:
 
 #### variables de  decison
 
- 
+
 $$
 x_i = \begin{cases}  1\space si\space on\space choisit\space le\space trajer , \space i,  \\ 0 \space sinon, \end{cases}
 $$
@@ -42,3 +44,29 @@ $$
 - contraint d'ntegrité :
   $ x_i \in \{0,1\}\space \forall i \in [1,nbVariable]$  
 
+
+Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  la valeur au debut. Ces sont  nbVariable*, *nbRegroupemet* : 
+
+- Pour calculer *nbVariable* , nous avons besoin degenerer tous les ss-ensembles en fonction de nombre de lieux de pompage(privé de 0) en utilisant l'algorithme de la section *Explication de l'algorithme*. 
+- La valeur nbRegroupement est donnée par le nombre de lieux de pompage(prive de 0).
+
+## Programme Linéaire sous GLPK
+
+​	Dans la classe *glpKWrapper*, on initialise le problème avec son nom et definit qu'il s'agit un probleme de minisation. 
+
+- couts des variables des decision :
+
+  Pour definir les couts *couts* des variables decisions on utilise vecteur qui contient le plus court chemin pour chaque regroupement qui se trouve dans la classe *probleme*. Voici la procedure *construit_couts* de la classe *glpkwrapper* :
+
+- Définition des coefficients non-nuls dans la matrice des contraintes :
+
+  Les coefficients de la matrice creuse. Pour faire cela, on possede trois tableaux dynamiques *ia,ja,ar*  de taille nombre de creux(nb_creuxç=_) de la matrice creux:
+
+  - nb_creux_ : le nombre de  variable present dans chaque contrainte. Cette infrormation est  stocké dans la classe *problème* dans l'attribut ** 
+  - ia :  numero de contrainte 
+  - ja : les indices des variables present dans la contrainte *i*
+  - ar : les couts  de chaque variable present dans la conteinte *i*
+
+  ​
+
+  ​	
