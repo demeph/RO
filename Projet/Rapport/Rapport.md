@@ -3,12 +3,6 @@
 [TOC]
 
 
-<<<<<<< HEAD
-###Class *Donnee*
-=======
-## Modélisation sous forme de programme linéaire
->>>>>>> origin/master
-
 Posons tout d'abord ce problème sous la forme d'un programme linaire :
 ### Rappel des notations du sujet
 - $n \in \mathbb{N}$, le nombre de lieux
