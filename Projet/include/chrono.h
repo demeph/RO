@@ -12,6 +12,7 @@ class chrono
     void start();
     void stop();
     double to_ms() const;
+    double to_sec() const;
 
   private:
     timeval start_utime_;
