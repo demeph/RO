@@ -4,11 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "regroupement.h"
-#include "probleme.h"
-
 #include <string>
 #include <iostream>
+#include "regroupement.h"
+#include "probleme.h"
 
 class donnees
 {
