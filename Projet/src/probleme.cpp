@@ -1,7 +1,7 @@
 #include "probleme.h"
 
-probleme::probleme(std::vector<regroupement> && regroupements, unsigned int nb_points):
-    regroupements_(std::move(regroupements)),
+probleme::probleme(std::vector<regroupement>& regroupements, unsigned int nb_points):
+    regroupements_(regroupements),
     regroupements_contenant_(nb_points)
 {
     init_regroupements_contenant();

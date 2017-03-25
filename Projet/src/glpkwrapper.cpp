@@ -83,7 +83,6 @@ void glpkwrapper::resoudre_probleme()
 	glp_write_lp(trumpland,NULL,"trumpland.lp");
 	glp_simplex(trumpland,NULL);	
 	glp_intopt(trumpland,NULL);
-	afficher();
 }
 
 void glpkwrapper::afficher()

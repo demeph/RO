@@ -7,7 +7,7 @@
 class probleme
 {
   public:
-    probleme(std::vector<regroupement> && regroupements, unsigned int nb_points);
+    probleme(std::vector<regroupement> & regroupements, unsigned int nb_points);
     probleme()=delete;
 
     std::vector<regroupement> const& regroupements() const { return regroupements_; }

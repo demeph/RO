@@ -10,14 +10,51 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     std::string source_file(argv[1]);
-    cout << "opening file" << source_file << endl;
+
+    double data_loading_time,
+        regr_compute_time,
+        shortest_path_compute_time,
+        glpk_solving_time,
+        problem_creation_time;
 
     chrono chr;
+
+    cout << "chargement des donnees du fichier " << source_file << " ... ";
+
     chr.start();
-    
     donnees data(source_file);
-    auto le_probleme = data.generer_probleme();
-    std::vector<regroupement> combinaisons = le_probleme.regroupements();
+    chr.stop();
+
+    data_loading_time = chr.to_sec();
+    cout << data_loading_time << " secondes" << endl;
+
+    cout << "\ncalcul des regroupements réalisables ... ";
+
+    chr.start();
+    auto regroupements_realisables = data.generer_regroupements();
+    chr.stop();
+
+    regr_compute_time = chr.to_sec();
+    cout << regr_compute_time << " secondes" << endl;
+
+    cout << "\ncalcul des plus courts chemins ... ";
+
+    chr.start();
+    for(auto & el : regroupements_realisables)
+        data.init_distance(el);
+    chr.stop();
+
+    shortest_path_compute_time = chr.to_sec();
+    cout << shortest_path_compute_time << " secondes" << endl;
+
+    cout << "\ngénération du problème ... ";
+    chr.start();
+    probleme le_probleme(regroupements_realisables, data.points_de_pompage());
+    chr.stop();
+
+    problem_creation_time = chr.to_sec();
+    cout << problem_creation_time << " secondes " << endl;
+    
 
     // unsigned int threshold = 100;
     // if(combinaisons.size() < threshold)
@@ -43,16 +80,25 @@ int main(int argc, char *argv[])
 
     // }
 
-
-    glpkwrapper glpk(data.nblieux(),le_probleme);
-    cout << "wrapper :\n" << glpk << endl;
-    glpk.resoudre_probleme();
-
+    cout << "\nrésolution du problème avec glpk\n" << endl;
     
-
+    chr.start();
+    glpkwrapper glpk(data.nblieux(),le_probleme);
+    //cout << "wrapper :\n" << glpk << endl;
+    glpk.resoudre_probleme();
     chr.stop();
 
-    cout << "temps : " << chr.to_ms() / 1000 << endl;
+    glpk_solving_time = chr.to_sec();
+    cout << "\nla résolution du problème avec glpk a pris " << glpk_solving_time << " secondes\n" << endl;
+
+    glpk.afficher();
+
+    cout << "\ntemps de calcul total : " << 
+        data_loading_time +
+        regr_compute_time +
+        shortest_path_compute_time +
+        glpk_solving_time +
+        problem_creation_time << endl;
 
     //libération automatique de la memoire via le destructeur
 	return 0;

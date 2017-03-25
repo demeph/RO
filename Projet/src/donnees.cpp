@@ -55,42 +55,42 @@ donnees::~donnees()
 	free(demande_);	
 }
 
-probleme donnees::generer_probleme() const
+std::vector<regroupement> donnees::generer_regroupements() const
 {
-    std::vector<regroupement> regroupements;
+    std::vector<regroupement> result;
 
     for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompage
         if(capacite_ >= demande_[i])//on teste quand même la capacité
         {
-            regroupements.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
-            init_distance(regroupements.back());
+            result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
+            //init_distance(result.back());
         }
 
     unsigned int start = 0;
-    unsigned int stop = regroupements.size();
+    unsigned int stop = result.size();
     
     for(unsigned int stage = 2; stage < nblieux_; ++stage)
     {//génération des sous-ensembles de taille stage
         for(; start < stop; ++start)
         {//parcours de chacun des points de taille stage-1
-            for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
-            {//création des regroupements de préfixe regroupements[start]
-                if(regroupements[start].quantite() + demande_[i] <= capacite_)
-                {//filtrage. seuls les regroupements dont la quantité d'eau est transportable sont ajoutés
-                    regroupements.push_back( regroupements[start] );
-                    //le nouveau regroupement est une copie de regroupements[start] ...
-                    regroupements.back().add(i, demande_[i]);
+            for(unsigned int i = result[start].dernier_point() + 1; i < nblieux_; ++i)
+            {//création des result de préfixe result[start]
+                if(result[start].quantite() + demande_[i] <= capacite_)
+                {//filtrage. seuls les result dont la quantité d'eau est transportable sont ajoutés
+                    result.push_back( result[start] );
+                    //le nouveau regroupement est une copie de result[start] ...
+                    result.back().add(i, demande_[i]);
                     // ... auquel on ajoute le point i et la quantité d'eau correspondante
-                    init_distance(regroupements.back());
+                    //init_distance(result.back());
                     //on calcule le chemin le plus court du regroupement créé
                 }
             }
         }
         
         start = stop;
-        stop = regroupements.size();
+        stop = result.size();
     }
-    probleme result(std::move(regroupements), nblieux_-1);
+    //probleme result(std::move(result), nblieux_-1);
     return result;
 }
 
@@ -112,7 +112,7 @@ unsigned int donnees::distance( std::vector<unsigned int> lieux) const
 void donnees::init_distance(regroupement& rgrp) const
 {
     std::vector<unsigned int>& lieux(rgrp.lieux());
-    std::sort(lieux.begin(), lieux.end());//on s'assure que lieux soit trié avant de faire des permutations
+    //std::sort(lieux.begin(), lieux.end());//on s'assure que lieux soit trié avant de faire des permutations
     std::vector<unsigned int> ordre_opti(lieux);
     
     unsigned int min_dist = distance(lieux);

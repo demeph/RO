@@ -7,22 +7,22 @@
 #include <string>
 #include <iostream>
 #include "regroupement.h"
-#include "probleme.h"
 
 class donnees
 {
   public:
     donnees(std::string file);
     ~donnees();
-    probleme generer_probleme() const;
+    std::vector<regroupement> generer_regroupements() const;
     unsigned int distance( std::vector<unsigned int> lieux ) const;
     unsigned int nblieux() const { return nblieux_; }
+    unsigned int points_de_pompage() const { return nblieux_ -1; }
     unsigned int capacite() const { return capacite_; }
     unsigned int distancier(unsigned int x,unsigned int y) const {return C_[x][y];}
     unsigned int demande(unsigned int x) const {return demande_[x];}
+    void init_distance(regroupement& rgrp) const;
 
   private:
-    void init_distance(regroupement& rgrp) const;
     
 	unsigned int nblieux_; /* Nombre de lieux (incluant le dépôt) */
 	unsigned int capacite_; /* Capacité du véhicule de livraison */
