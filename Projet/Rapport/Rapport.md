@@ -4,7 +4,7 @@
 
 ##Description des classes
 
-###class *Donnee*
+###Class *Donnee*
 
 La classe permettant de lire les données present dans le dossier *data*. Cette classe possede plusieurs attributs en privé : 
 
@@ -104,7 +104,11 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
 }
 ```
 
-La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante
+La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante.
+
+### Class Regroupement
+
+Cette classe permet de stocker le regroupement 
 
 
 ## Écriture du problème en GLPK
@@ -172,10 +176,6 @@ Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  
   - *ar* : les couts  de chaque variable present dans la contrainte *i*, dans notre probleme les coûts de nos variable de decision sont égale à 1.
 
   Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
-
-
-
-
 
 
 ## Compilation
