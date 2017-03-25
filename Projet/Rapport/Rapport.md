@@ -1,35 +1,38 @@
-## Ecriture de probleme en GLPK
+## Écriture du problème en GLPK
 
 ## Programme Linéaire
 
-Posons tout d'abord cette problème sous la forme d'un  probleme linaire:
+Posons tout d'abord ce problème sous la forme d'un programme linaire:
 
-#### variables de  decison
+### Rappel des notations du sujet
 
+- $n \in \mathbb{N}$, le nombre de lieux
+- $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
+- $Ca \in \mathbb{N}$, la capacité du drone
 
-$$
-x_i = \begin{cases}  1\space si\space on\space choisit\space le\space trajer , \space i,  \\ 0 \space sinon, \end{cases}
-$$
+### Définition
 
-#### fonction objectif
+Un regroupement r est dit réalisable si $\sum_{i \in r} d_i \leq Ca$
 
-Minimiser la distance parcourue par la drone 
-$$
-\sum_{i = 1}^{nbVariable}  l_i *x_i
-$$
+### Paramètres
 
-- où nbVariable = le nombre de trajet qui depassent pas la capacité du drone
-- où $l_i$ :  la longeueur de la plus courte tournée
-- exemple sur nombre de lieux égale à 5
-  ​
+- $Re$ l'ensemble des regroupements réalisables
 
-$$
-\sum_{i=1}^{27} l_i*x_i
-$$
+### Variables de décison
 
-#### Contraintes
+$$ x_i = \begin{cases}  1\space si\space on\space choisit\space le\space regroupement \space i  \\ 0 \space sinon \end{cases} $$
 
-- Le lieu de pompage i doit etre visiter un et une seul fois, c'est-à-dire on doit avoir le nombre de regroupement dans laquelle apparait lieu de pompage i :
+### Fonction objectif
+
+Minimiser la distance parcourue par le drone 
+$$ \sum_{i = 1}^{Card(Re)}  l_i *x_i$$
+avec $l_i$ la longueur de la plus courte tournée couvrant le regroupement $i$
+
+ce qui donne $$ \sum_{i=1}^{27} l_i*x_i $$ sur l'exemple donné dans le sujet.
+
+### Contraintes
+
+- Le point de pompage $i$ doit être visité une et une seule fois, c'est-à-dire on doit avoir le nombre de regroupement dans laquelle apparait lieu de pompage i :
 
   ​
   $$
@@ -42,7 +45,7 @@ $$
   $$
 
 - contraint d'ntegrité :
-  $ x_i \in \{0,1\}\space \forall i \in [1,nbVariable]$  
+  $ x_i \in \{0,1\}\space \forall i \in [1,nbVariable]$
 
 
 Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  la valeur au debut. Ces sont  nbVariable*, *nbRegroupemet* : 

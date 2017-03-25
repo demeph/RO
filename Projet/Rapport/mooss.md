@@ -5,17 +5,10 @@ Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est 
 
 #### Explication de l'algorithme
 
-Nous utiliserons les notations suivantes, extraites du sujet :
-- $n \in \mathbb{N}$, le nombre de lieux
-- $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
-- $Ca \in \mathbb{N}$, la capacité du drone
-
-
 Le principe utilisé ici est de générer les regroupements de taille 1 et de s'en servir pour générer ceux de taille 2 puis ceux de taille 3, et ainsi de suite.
 
 Posons $p$ le nombre de points de pompage ( $p = n-1$ ).
 
-Un regroupement r est dit réalisable si $\sum_{i \in r} d_i \leq Ca$
 
 
 ##### Initialisation
@@ -24,7 +17,7 @@ On se retrouve donc avec $p$ vecteurs de taille 1.
 
 
 ##### Hérédité
-###### genération
+###### Genération
 On remarque que les regroupements de taille $t$ sont des préfixes des regroupements de taille $t+1$.
 On se sert de cette propriété pour construire l'ensemble des regroupements.
 
@@ -36,7 +29,7 @@ $$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space],\
 
 On applique ce procédé à tous les regroupements de taille $t$ pour construire tous les regroupements de tailles $t+1$.
 On peut ainsi construire tous les regroupements de taille allant de $1$ à $n$ à partir des regroupements de taille $1$.
-###### filtrage
+###### Filtrage
 On remarque que cet algorithme génère tous les regroupements, même ceux non réalisables.
 On peut résoudre ce problème en testant si l'instance est réalisable avant de l'ajouter à la solution partielle.
 L'avantage de cette approche est que les regroupements ayant un préfixe non réalisable ne sont pas envisagés, économisant ainsi du temps de calcul.
