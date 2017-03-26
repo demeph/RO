@@ -1,9 +1,14 @@
 # Projet RO  : BladeFlyer II - conquest of water
 
 [TOC]
+## Introduction
+
+Le projet consiste à trouver la meilleur solution pour collecter de l'eau de different point de pompage pour sauver l'humanité  en  utilisant la drone et en parcourant la distance minimal entre la base et les points de pompage. Notre travail consiste à generer tous les regroupement possible entre les points pompage en les filtrant suivant la capacité du drone. Ensuite, on calcule le plus courte chemin entre les points pompage et la base.
+
+## Analyse du problème 
 
 Posons tout d'abord ce problème sous la forme d'un programme linaire :
-### Rappel des notations du sujet
+### Les  notations du sujet
 - $n \in \mathbb{N}$, le nombre de lieux
 - $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
 - $Ca \in \mathbb{N}$, la capacité du drone
@@ -41,7 +46,7 @@ ce qui donne $$ \sum_{i=1}^{27} l_i*x_i $$ sur l'exemple donné dans le sujet.
 Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  la valeur au debut. Ces sont  nbVariable*, *nbRegroupemet* : 
 
 - Pour calculer *nbVariable* , nous avons besoin degenerer tous les ss-ensembles en fonction de nombre de lieux de pompage(privé de 0) en utilisant l'algorithme de la section *Explication de l'algorithme*. 
-- La valeur nbRegroupement est donnée par le nombre de lieux de pompage(prive de 0).
+- La valeur nbRegroupement est donnée par le nombre de lieux de pompage(privé de 0).
 
 
 ## Description des algorithmes
@@ -86,6 +91,8 @@ $$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space ],
 
 ### Calcul du plus court chemin
 je me chargerais d'expliquer ça
+
+- dac
 
 ## Explication des classes utilisées
 
@@ -215,10 +222,10 @@ Cette classe permet de calculer le cout temporel de calcul de different, comme l
 Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
 
 ### Calcul du plus court chemin
-je me chargerais d'expliquer
 
-- Dac
+je me chargerais d'expliquer ça
 
+- dac
 
 ## Compilation
 
@@ -262,4 +269,5 @@ Pour compiler notre projet, il suffit de suvre les etapes suivantes:
     ./ro_test data/B/nom_du_fichier.dat
     ```
 
-    ​
+
+## Conclusion
