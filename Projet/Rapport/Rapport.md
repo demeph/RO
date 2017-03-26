@@ -195,7 +195,24 @@ De plus on possede different accesseur(getter) pour les attributs de la classe.
 
 ### Classe *Probleme* 
 
+Cette classe contient l'information sur les contraintes de cette probleme,c'est-à-dire les indices  des variables de decision pour chaque contrainte. Les attributs de la classe :
 
+| Attribut                 | Type                             | Description                              |
+| ------------------------ | -------------------------------- | ---------------------------------------- |
+| regroupement_            | Regroupement                     | ensemble de regroupement des point pompages |
+| regroupements_contenant_ | vecteur de vecteur de regroupeme | pour chaque contrainte, on a les indices des variables de decision qu'on prend |
+
+De plus, dans cette classe on trouve les accesseur(getters).
+
+### Autres Classes
+
+#### Classe Chrono
+
+Cette classe permet de calculer le cout temporel de calcul de different, comme le temps pour la lecture de fichier avec des données, le temps pour generation de sous-ensemble, le temps pour la calcul de court chemin, le temps pour la generation  du problème en glpk, puis le temps pour trouver la solution optimale.
+
+#### En-tête *Container-overload*
+
+Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
 
 ### Calcul du plus court chemin
 je me chargerais d'expliquer
