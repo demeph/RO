@@ -89,7 +89,7 @@ je me chargerais d'expliquer ça
 
 ## Explication des classes utilisées
 
-### classe *donnees*
+### Classe *donnees*
 
 La classe permettant de lire les données present dans le dossier *data*. Cette classe possede plusieurs attributs en privé : 
 
@@ -129,11 +129,11 @@ Les methodes present dans cette classe :
   Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
 
 
-## Implémentation des algorithmes en c++
+#### Implémentation des algorithmes en c++
 
-### Génération des sous-ensembles
+##### Génération des sous-ensembles
 
-#### Initialisation
+###### Initialisation
 
 ```c++
 std::vector<regroupement> regroupements;
@@ -145,7 +145,7 @@ for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompa
     }
 ```
 
-#### Hérédité
+###### Hérédité
 
 ```c++
 unsigned int start = 0;
@@ -176,12 +176,31 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
 
 La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante.
 
-### Class Regroupement
+### Classe Regroupement
 
-Cette classe permet de stocker le regroupement 
+Cette classe permet de stocker tous les chemins possible entre les points pompages. On possede les attributs suivants:
+
+| Attribut  | Type              | Description                              |
+| --------- | ----------------- | ---------------------------------------- |
+| lieux_    | vecteur d'entiers | ensemble des points de pompage ne depassant la capacité du drone |
+| quantite_ | entiers signés    | volume de l'eau qu'on prend en parcourant tous les points se trouvant dans *lieux_* |
+| distance_ | entiers signés    | distance minimum entre les points de pompage |
+
+On possede different methodes:
+
+- *regroupement* : constructeur permettant initialiser la quantite et le vecteur de lieux
+- *add* : methode permettant ajout le numero de point pompage et increment la quantité d'eau de ss-ensemble.
+
+De plus on possede different accesseur(getter) pour les attributs de la classe.
+
+### Classe *Probleme* 
+
+
 
 ### Calcul du plus court chemin
 je me chargerais d'expliquer
+
+- Dac
 
 
 ## Compilation
@@ -206,7 +225,7 @@ Pour compiler notre projet, il suffit de suvre les etapes suivantes:
   make 
   ```
 
-- A cet etape, il faut chosir pour qu'elle donne on veut calculer lancer notre programme:
+- A cet etape, il faut chosir pour qu'elle donne on veut calculer lancer notre programeme:
 
   - Pour l'exemple du projet
 
