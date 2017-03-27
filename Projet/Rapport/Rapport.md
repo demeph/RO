@@ -90,9 +90,8 @@ $S_r \leftarrow \{\}$
 $$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space ],\space S_r\space \leftarrow\space \begin{cases} S_r\space \cup\space \{r\space \cup\space \{i\}\} \space si \space (\sum_{j \in r} d_j)  + d_i \leq Ca \\ S_r \space sinon \end{cases}$$
 
 ### Calcul du plus court chemin
-je me chargerais d'expliquer ça
 
-- dac
+La méthode utilisée pour calculer le plus court chemin d'un regroupement donné consiste simplement à parcourir toutes les permutations et calculer pour chacune la distance parcourue.
 
 ## Explication des classes utilisées
 
@@ -135,6 +134,43 @@ Les methodes present dans cette classe :
 
   Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
 
+### Classe Regroupement
+
+Cette classe permet de stocker tous les chemins possible entre les points pompages. On possede les attributs suivants:
+
+| Attribut  | Type              | Description                              |
+| --------- | ----------------- | ---------------------------------------- |
+| lieux_    | vecteur d'entiers | ensemble des points de pompage ne depassant la capacité du drone |
+| quantite_ | entiers signés    | volume de l'eau qu'on prend en parcourant tous les points se trouvant dans *lieux_* |
+| distance_ | entiers signés    | distance minimum entre les points de pompage |
+
+On possede different methodes:
+
+- *regroupement* : constructeur permettant initialiser la quantite et le vecteur de lieux
+- *add* : methode permettant ajout le numero de point pompage et increment la quantité d'eau de ss-ensemble.
+
+De plus on possede different accesseur(getter) pour les attributs de la classe.
+
+### Classe *Probleme* 
+
+Cette classe contient l'information sur les contraintes de cette probleme,c'est-à-dire les indices  des variables de decision pour chaque contrainte. Les attributs de la classe :
+
+| Attribut                 | Type                             | Description                              |
+| ------------------------ | -------------------------------- | ---------------------------------------- |
+| regroupement_            | Regroupement                     | ensemble de regroupement des point pompages |
+| regroupements_contenant_ | vecteur de vecteur de regroupeme | pour chaque contrainte, on a les indices des variables de decision qu'on prend |
+
+De plus, dans cette classe on trouve les accesseur(getters).
+
+### Autres Classes
+
+#### Classe Chrono
+
+Cette classe permet de calculer le cout temporel de calcul de different, comme le temps pour la lecture de fichier avec des données, le temps pour generation de sous-ensemble, le temps pour la calcul de court chemin, le temps pour la generation  du problème en glpk, puis le temps pour trouver la solution optimale.
+
+#### En-tête *Container-overload*
+
+Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
 
 #### Implémentation des algorithmes en c++
 
@@ -183,49 +219,10 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
 
 La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante.
 
-### Classe Regroupement
-
-Cette classe permet de stocker tous les chemins possible entre les points pompages. On possede les attributs suivants:
-
-| Attribut  | Type              | Description                              |
-| --------- | ----------------- | ---------------------------------------- |
-| lieux_    | vecteur d'entiers | ensemble des points de pompage ne depassant la capacité du drone |
-| quantite_ | entiers signés    | volume de l'eau qu'on prend en parcourant tous les points se trouvant dans *lieux_* |
-| distance_ | entiers signés    | distance minimum entre les points de pompage |
-
-On possede different methodes:
-
-- *regroupement* : constructeur permettant initialiser la quantite et le vecteur de lieux
-- *add* : methode permettant ajout le numero de point pompage et increment la quantité d'eau de ss-ensemble.
-
-De plus on possede different accesseur(getter) pour les attributs de la classe.
-
-### Classe *Probleme* 
-
-Cette classe contient l'information sur les contraintes de cette probleme,c'est-à-dire les indices  des variables de decision pour chaque contrainte. Les attributs de la classe :
-
-| Attribut                 | Type                             | Description                              |
-| ------------------------ | -------------------------------- | ---------------------------------------- |
-| regroupement_            | Regroupement                     | ensemble de regroupement des point pompages |
-| regroupements_contenant_ | vecteur de vecteur de regroupeme | pour chaque contrainte, on a les indices des variables de decision qu'on prend |
-
-De plus, dans cette classe on trouve les accesseur(getters).
-
-### Autres Classes
-
-#### Classe Chrono
-
-Cette classe permet de calculer le cout temporel de calcul de different, comme le temps pour la lecture de fichier avec des données, le temps pour generation de sous-ensemble, le temps pour la calcul de court chemin, le temps pour la generation  du problème en glpk, puis le temps pour trouver la solution optimale.
-
-#### En-tête *Container-overload*
-
-Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
-
 ### Calcul du plus court chemin
 
-je me chargerais d'expliquer ça
-
-- dac
+Comme expliqué dans la section *Description des algorithmes*, la méthode de calcul de plus court chemin consiste simplement à parcourir tous les chemins possibles et conserver le plus court.
+Pour cela, nous avons utilisé la fonction std::next_permutation permettant de parcourir une à une les permutations d'un conteneur de la bibliothèque standard.
 
 ## Compilation
 
