@@ -94,8 +94,8 @@ Cette classe représente un ensemble de points de pompage.
 #### Atributs
 | Attribut  | Type              | Description                              |
 | --------- | ----------------- | ---------------------------------------- |
-| lieux_    | vecteur d'entiers | indice des points de pompage du regroupement  |
-| quantite_ | entier signé      | quantité d'eau du regroupement |
+| lieux_    | vecteur d'entiers | indice des points de pompage du regroupement |
+| quantite_ | entier signé      | quantité d'eau du regroupement           |
 | distance_ | entier signé      | distance du plus cours chemin passant par tous les points de pompage |
 
 #### Méthodes
@@ -108,7 +108,7 @@ Son constructeur et son destructeur reprennent respectivement le code des foncti
 
 #### Attributs
 | Attribut  | Type              | Description                   |
-| --------- | ----------------- | ------------------------------|
+| --------- | ----------------- | ----------------------------- |
 | nblieux_  | entier            | nombre de lieux               |
 | capacite_ | entier            | capacité du drone             |
 | demande_  | tableau d'entiers | capacité des lieux de pompage |
@@ -128,10 +128,10 @@ Initialise l'attribut distance_ et réordonne les lieux_ de *rgrp* selon le plus
 Cette classe représente l'instance du problème à résoudre.
 
 #### Attributs
-| Attribut                 | Type                             | Description                              |
-| ------------------------ | -------------------------------- | ---------------------------------------- |
-| regroupements_           | vecteur de regroupements         | ensemble des regroupements réalisables |
-| regroupements_contenant_ | vecteur de vecteur d'entiers     | regroupements[i] = indice des regroupements contenant le point de pompage i |
+| Attribut                 | Type                         | Description                              |
+| ------------------------ | ---------------------------- | ---------------------------------------- |
+| regroupements_           | vecteur de regroupements     | ensemble des regroupements réalisables   |
+| regroupements_contenant_ | vecteur de vecteur d'entiers | regroupements[i] = indice des regroupements contenant le point de pompage i |
 
 #### Méthodes
 ``` void init_regroupements_contenant() ``` :
@@ -146,31 +146,44 @@ Cette classe est utilisée pour résoudre le problème de partitionnement.
 #### Méthodes
 
 ``` void construit_couts() ``` :
-Initialise les couts de chaque tournée à la valeur du plus court chemin du regroupement représentant cette tournée.
+Initialise les couts de chaque tournée à la valeur du plus court chemin du regroupement représentant cette tournée en parcourant la distance le plus court de la regroupement.
 
 ``` void construit_taille_contr() ``` :
 Initialise les paramètres de la matrice creuse.
+
+Les coefficients de la matrice creuse. Pour faire cela dans la procedure on possede trois tableaux dynamiques d'entiers:  *ia,ja,ar*.  Initialisés au nombre de creux(nb_creux_) de la matrice creux :
+
+- *nb_creux_* : le nombre de  variable present dans chaque contrainte. Cette infrormation est  stocké dans la classe *problème* dans l'attribut de type *vector* : *regroupement_contenant* 
+- *ia* :  numero de contrainte
+- *ja* : les indices des variables de decision stockés dans  le vecteur *regroupement_contenant* de chaque contrainte *i*
+- *ar* : les couts  de chaque variable present dans la contrainte *i*, dans notre probleme les coûts de nos variable de decision sont égale à 1.
+
+Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. 
 
 ``` void def_probleme() ``` :
 
 
 - Definition des variables de decision
 
-  On defiinit les variables de decision comme les variables entiers en utilisant du mots-clés *GLP_DB* et puis on prcecise que ces sont des variables binaires en utilisant mots-clés *GLP_BV*. Puis en utilisant la fonction de *glpk*, *glp_set_obj_coef*, on attribut les couts *couts* à chaque variable de decision.
+  En utilisant la methode *glp_set_col_bnds*, on defiinit les variables de decision comme les variables entiers en utilisant du mots-clés *GLP_DB* et puis en utilisant *glp_set_col_kind* on prcecise que ces sont des variables binaires en utilisant mots-clés *GLP_BV*. Puis en utilisant la fonction de *glpk*, *glp_set_obj_coef*, on attribut les couts *couts* à chaque variable de decision.
 
-- Définition des coefficients non-nuls dans la matrice des contraintes :
+- Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar* defini en utilisant la procédure *construit_taille_contr*.
 
-  Les coefficients de la matrice creuse. Pour faire cela dans la procedure on possede trois tableaux dynamiques d'entiers:  *ia,ja,ar*.  Initialisés au nombre de creux(nb_creux_) de la matrice creux :
 
-  - *nb_creux_* : le nombre de  variable present dans chaque contrainte. Cette infrormation est  stocké dans la classe *problème* dans l'attribut de type *vector* : *regroupement_contenant* 
+```void resoudre_probleme()``` :
 
-  - *ia* :  numero de contrainte
+Au debut de cette procédure on appele la fonction *def_probleme*, puis on utilise les methodes déjà existant dans glpk pour resoudre le problème donnée.
 
-  - *ja* : les indices des variables de decision stockés dans  le vecteur *regroupement_contenant* de chaque contrainte *i*
+- ```glp_write_lp``` : cette methode nous permet d'écrire dans une fichier *.lp* le probleme sous la programme linéaire comme on aurait fait sur la feuille. Cette fonction est très utile, car ca simplifie le debogguage en cas d'erreur lors insertion des données.
+- ```glp_simplex```  : pour le problème donnée, cette méthode permet de resoudre en utilisant soit l'algorithme simplexe de phase I ou phase II
+- ```glp_intopt```  : cette methode permet d'obtenir une solution optimale en relaxant les variables de decision.
 
-  - *ar* : les couts  de chaque variable present dans la contrainte *i*, dans notre probleme les coûts de nos variable de decision sont égale à 1.
+```void afficher()```:
 
-  Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
+Dans cette méthode, on affiche la solution optimale et les valeurs de decision qui sont égale à 1. 
+
+- ```glp_mip_obj_val``` : cette méthode permet d'obtenir la valeur de la fonction objective
+- ```glp_mip_col_val``` : cette méthode permet de parcourir un à un tous les variables de decision 
 
 ### Autres Classes
 #### En-tête *Container-overload*
