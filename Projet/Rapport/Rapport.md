@@ -6,8 +6,8 @@
 Le projet consiste à trouver la meilleur solution pour collecter de l'eau de different point de pompage pour sauver l'humanité  en  utilisant la drone et en parcourant la distance minimal entre la base et les points de pompage. Notre travail consiste à generer tous les regroupement possible entre les points pompage en les filtrant suivant la capacité du drone. Ensuite, on calcule le plus courte chemin entre les points pompage et la base.
 
 ## Analyse du problème 
-
 Posons tout d'abord ce problème sous la forme d'un programme linaire :
+
 ### Les  notations du sujet
 - $n \in \mathbb{N}$, le nombre de lieux
 - $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
@@ -30,17 +30,12 @@ ce qui donne $$ \sum_{i=1}^{27} l_i*x_i $$ sur l'exemple donné dans le sujet.
 
 ### Contraintes
 - Le point de pompage $i$ doit être visité une et une seule fois, c'est-à-dire on doit avoir le nombre de regroupement dans laquelle apparait lieu de pompage i :
-  ​
-  $$
-  \sum_ {i =1}^{nbRegroupement} x_i = 1
-  $$
+  $$ \sum_ {i =1}^{nbRegroupement} x_i = 1 $$
 
 - contrainte sur l'exemple du sujet, pour le point de pompage 1 :
-  $$
-  \sum_{i=1}^{13} x_i = 1
-  $$
+  $$ \sum_{i=1}^{13} x_i = 1 $$
 
-- contraint d'ntegrité :
+- contrainte d'integrité :
   $ x_i \in \{0,1\},\space \forall i \in [1,nbVariable]$
 
 Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  la valeur au debut. Ces sont  nbVariable*, *nbRegroupemet* : 
@@ -50,7 +45,6 @@ Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  
 
 
 ## Description des algorithmes
-
 ### Génération des sous-ensembles
 
 Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est à dire celles dont la quantité d'eau ne dépasse pas la capacité du drone. Le code expliqué par la suite correspond à la méthode *donnees::generer_probleme*.
@@ -90,17 +84,14 @@ $S_r \leftarrow \{\}$
 $$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space ],\space S_r\space \leftarrow\space \begin{cases} S_r\space \cup\space \{r\space \cup\space \{i\}\} \space si \space (\sum_{j \in r} d_j)  + d_i \leq Ca \\ S_r \space sinon \end{cases}$$
 
 ### Calcul du plus court chemin
-
 La méthode utilisée pour calculer le plus court chemin d'un regroupement donné consiste simplement à parcourir toutes les permutations et calculer pour chacune la distance parcourue.
 
 ## Explication des classes utilisées
-
 ### regroupement
 
 Cette classe représente un ensemble de points de pompage.
 
 #### Atributs
-
 | Attribut  | Type              | Description                              |
 | --------- | ----------------- | ---------------------------------------- |
 | lieux_    | vecteur d'entiers | indice des points de pompage du regroupement  |
@@ -108,17 +99,14 @@ Cette classe représente un ensemble de points de pompage.
 | distance_ | entier signé      | distance du plus cours chemin passant par tous les points de pompage |
 
 #### Méthodes
-
 ``` void add(unsigned int point, unsigned int quantité) ``` :
 Ajoute le point de pompage d'indice *point* et de quantité *quantite* dans le regroupement.
 
 ### donnees
-
 Cette classe permet de lire les données présentes dans le dossier *data*.
 Son constructeur et son destructeur reprennent respectivement le code des fonctions *lecture_data* et *free_data*.
 
 #### Attributs
-
 | Attribut  | Type              | Description                   |
 | --------- | ----------------- | ------------------------------|
 | nblieux_  | entier            | nombre de lieux               |
@@ -127,7 +115,6 @@ Son constructeur et son destructeur reprennent respectivement le code des foncti
 | C_        | matrice d'entiers | distancier                    |
 
 #### Méthodes
-
 ``` std::vecteur<regroupements> generer_regroupements() const ``` :
 Construit tous les regroupements réalisables, sans calculer le plus court chemin.
 
@@ -135,10 +122,25 @@ Construit tous les regroupements réalisables, sans calculer le plus court chemi
 Calcule la distance du parcours dans l'ordre de *lieux*, en commençant et en terminant par le point 0.
 
 ``` void init_distance(regroupement& rgrp) const ```
-Initialise l'attribut *distance_* et réordonne les *lieux_* de *rgrp* selon le plus court chemin.
+Initialise l'attribut distance_ et réordonne les lieux_ de *rgrp* selon le plus court chemin.
+
+### probleme
+Cette classe représente l'instance du problème à résoudre.
+
+#### Attributs
+| Attribut                 | Type                             | Description                              |
+| ------------------------ | -------------------------------- | ---------------------------------------- |
+| regroupements_           | vecteur de regroupements         | ensemble des regroupements réalisables |
+| regroupements_contenant_ | vecteur de vecteur d'entiers     | regroupements[i] = indice des regroupements contenant le point de pompage i |
+
+#### Méthodes
+``` void init_regroupements_contenant() ``` :
+Parcours chaque regroupement et ajoute son indice $i$ à regroupements_contenant_$[j] , \forall j \in regroupements\_[i]$.
+
+### chrono
+Cette classe reprends le code et les fonctionnalités des fonctions *chrono_start*, *chrono_stop* et *chrono_ms*, en ajoutant cependant la possibilité d'obtenir le temps directement en secondes, grâce à la méthode *to_sec*. Elle nous permet donc de déterminer le temps de calcul des étapes cruciales de la résolution du problème.
 
 ### Classe *glpkwrapper*
-
 ​	Dans la classe *glpkwrapper*, on initialise le problème avec son nom et definit qu'il s'agit un probleme de minisation. 
 
 - Couts des variables des decision :
@@ -163,33 +165,13 @@ Initialise l'attribut *distance_* et réordonne les *lieux_* de *rgrp* selon le 
 
   Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
 
-### Classe *Probleme* 
-
-Cette classe contient l'information sur les contraintes de cette probleme,c'est-à-dire les indices  des variables de decision pour chaque contrainte. Les attributs de la classe :
-
-| Attribut                 | Type                             | Description                              |
-| ------------------------ | -------------------------------- | ---------------------------------------- |
-| regroupement_            | Regroupement                     | ensemble de regroupement des point pompages |
-| regroupements_contenant_ | vecteur de vecteur de regroupeme | pour chaque contrainte, on a les indices des variables de decision qu'on prend |
-
-De plus, dans cette classe on trouve les accesseur(getters).
-
 ### Autres Classes
-
-#### Classe Chrono
-
-Cette classe permet de calculer le cout temporel de calcul de different, comme le temps pour la lecture de fichier avec des données, le temps pour generation de sous-ensemble, le temps pour la calcul de court chemin, le temps pour la generation  du problème en glpk, puis le temps pour trouver la solution optimale.
-
 #### En-tête *Container-overload*
-
 Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
 
 #### Implémentation des algorithmes en c++
-
 ##### Génération des sous-ensembles
-
 ###### Initialisation
-
 ```c++
 std::vector<regroupement> regroupements;
 for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompage
@@ -201,7 +183,6 @@ for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompa
 ```
 
 ###### Hérédité
-
 ```c++
 unsigned int start = 0;
 unsigned int stop = regroupements.size();
@@ -232,12 +213,10 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
 La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante.
 
 ### Calcul du plus court chemin
-
 Comme expliqué dans la section *Description des algorithmes*, la méthode de calcul de plus court chemin consiste simplement à parcourir tous les chemins possibles et conserver le plus court.
 Pour cela, nous avons utilisé la fonction std::next_permutation permettant de parcourir une à une les permutations d'un conteneur de la bibliothèque standard.
 
 ## Compilation
-
 Pour compiler notre projet, il suffit de suvre les etapes suivantes:
 
 - il faut se placer dans le dossier build  en utilisant la commande
@@ -277,6 +256,4 @@ Pour compiler notre projet, il suffit de suvre les etapes suivantes:
     ```bash
     ./ro_test data/B/nom_du_fichier.dat
     ```
-
-
 ## Conclusion
