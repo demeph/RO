@@ -72,7 +72,8 @@ void glpkwrapper::def_probleme()
 		glp_set_col_bnds(trumpland, i, GLP_DB, 0.0, 1.0);
 		glp_set_col_kind(trumpland, i, GLP_BV);
 	}  
-	for(unsigned i = 1;i <= nb_var_;++i) glp_set_obj_coef(trumpland,i,couts_[i - 1]);  
+	for(unsigned i = 1; i <= nb_var_; ++i)
+        glp_set_obj_coef(trumpland,i,couts_[i - 1]);
 
 	glp_load_matrix(trumpland,nb_creux_,ia_,ja_,ar_); 
 }

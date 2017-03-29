@@ -140,12 +140,19 @@ Parcours chaque regroupement et ajoute son indice $i$ à regroupements_contenant
 ### chrono
 Cette classe reprends le code et les fonctionnalités des fonctions *chrono_start*, *chrono_stop* et *chrono_ms*, en ajoutant cependant la possibilité d'obtenir le temps directement en secondes, grâce à la méthode *to_sec*. Elle nous permet donc de déterminer le temps de calcul des étapes cruciales de la résolution du problème.
 
-### Classe *glpkwrapper*
-​	Dans la classe *glpkwrapper*, on initialise le problème avec son nom et definit qu'il s'agit un probleme de minisation. 
+### glpkwrapper
+Cette classe est utilisée pour résoudre le problème de partitionnement.
 
-- Couts des variables des decision :
+#### Méthodes
 
-  Pour definir les couts *couts* des variables decisions on utilise vecteur qui contient le plus court chemin pour chaque regroupement qui se trouve dans la classe *probleme*. Voir la procedure *construit_couts* de la classe *glpkwrapper*.
+``` void construit_couts() ``` :
+Initialise les couts de chaque tournée à la valeur du plus court chemin du regroupement représentant cette tournée.
+
+``` void construit_taille_contr() ``` :
+Initialise les paramètres de la matrice creuse.
+
+``` void def_probleme() ``` :
+
 
 - Definition des variables de decision
 
@@ -167,7 +174,7 @@ Cette classe reprends le code et les fonctionnalités des fonctions *chrono_star
 
 ### Autres Classes
 #### En-tête *Container-overload*
-Cette en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
+Cet en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
 
 #### Implémentation des algorithmes en c++
 ##### Génération des sous-ensembles

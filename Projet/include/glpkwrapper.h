@@ -22,14 +22,10 @@ class glpkwrapper
     unsigned int nb_creux() const { return nb_creux_; }
     void afficher();
   private:
-    // fonctions privées
     void construit_couts();
-    void construit_pb();
     void construit_taille_contr();
-
     void def_probleme();
 
-    //variables
     unsigned int nb_contr_;
     unsigned int nb_var_;
     int *couts_;
