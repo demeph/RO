@@ -95,18 +95,47 @@ La méthode utilisée pour calculer le plus court chemin d'un regroupement donn�
 
 ## Explication des classes utilisées
 
-### Classe *donnees*
+### regroupement
 
-La classe permettant de lire les données present dans le dossier *data*. Cette classe possede plusieurs attributs en privé : 
+Cette classe représente un ensemble de points de pompage.
 
-| Attribut  | Type             | Description                           |
-| --------- | ---------------- | ------------------------------------- |
-| nblieux_  | entier           | nombre de lieu de pompage             |
-| capacite_ | entier           | capacite de la drone                  |
-| demenade_ | tableau d'entier | capacité de chaque lieu de pompage    |
-| C_        | matrice i,j      | distancier entre les lieux de pompage |
+#### Atributs
 
-Les methodes present dans cette classe :
+| Attribut  | Type              | Description                              |
+| --------- | ----------------- | ---------------------------------------- |
+| lieux_    | vecteur d'entiers | indice des points de pompage du regroupement  |
+| quantite_ | entier signé      | quantité d'eau du regroupement |
+| distance_ | entier signé      | distance du plus cours chemin passant par tous les points de pompage |
+
+#### Méthodes
+
+``` void add(unsigned int point, unsigned int quantité) ``` :
+Ajoute le point de pompage d'indice *point* et de quantité *quantite* dans le regroupement.
+
+### donnees
+
+Cette classe permet de lire les données présentes dans le dossier *data*.
+Son constructeur et son destructeur reprennent respectivement le code des fonctions *lecture_data* et *free_data*.
+
+#### Attributs
+
+| Attribut  | Type              | Description                   |
+| --------- | ----------------- | ------------------------------|
+| nblieux_  | entier            | nombre de lieux               |
+| capacite_ | entier            | capacité du drone             |
+| demande_  | tableau d'entiers | capacité des lieux de pompage |
+| C_        | matrice d'entiers | distancier                    |
+
+#### Méthodes
+
+``` std::vecteur<regroupements> generer_regroupements() const ``` :
+Construit tous les regroupements réalisables, sans calculer le plus court chemin.
+
+``` unsigned int distance( std::vector<unsigned int> lieux ) const ``` :
+Calcule la distance du parcours dans l'ordre de *lieux*, en commençant et en terminant par le point 0.
+
+``` void init_distance(regroupement& rgrp) const ```
+Initialise l'attribut *distance_* et réordonne les *lieux_* de *rgrp* selon le plus court chemin.
 
 ### Classe *glpkwrapper*
 
@@ -133,23 +162,6 @@ Les methodes present dans cette classe :
   - *ar* : les couts  de chaque variable present dans la contrainte *i*, dans notre probleme les coûts de nos variable de decision sont égale à 1.
 
   Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar*.
-
-### Classe Regroupement
-
-Cette classe permet de stocker tous les chemins possible entre les points pompages. On possede les attributs suivants:
-
-| Attribut  | Type              | Description                              |
-| --------- | ----------------- | ---------------------------------------- |
-| lieux_    | vecteur d'entiers | ensemble des points de pompage ne depassant la capacité du drone |
-| quantite_ | entiers signés    | volume de l'eau qu'on prend en parcourant tous les points se trouvant dans *lieux_* |
-| distance_ | entiers signés    | distance minimum entre les points de pompage |
-
-On possede different methodes:
-
-- *regroupement* : constructeur permettant initialiser la quantite et le vecteur de lieux
-- *add* : methode permettant ajout le numero de point pompage et increment la quantité d'eau de ss-ensemble.
-
-De plus on possede different accesseur(getter) pour les attributs de la classe.
 
 ### Classe *Probleme* 
 

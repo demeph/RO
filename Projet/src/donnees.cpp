@@ -61,10 +61,7 @@ std::vector<regroupement> donnees::generer_regroupements() const
 
     for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompage
         if(capacite_ >= demande_[i])//on teste quand même la capacité
-        {
             result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
-            //init_distance(result.back());
-        }
 
     unsigned int start = 0;
     unsigned int stop = result.size();
@@ -81,8 +78,6 @@ std::vector<regroupement> donnees::generer_regroupements() const
                     //le nouveau regroupement est une copie de result[start] ...
                     result.back().add(i, demande_[i]);
                     // ... auquel on ajoute le point i et la quantité d'eau correspondante
-                    //init_distance(result.back());
-                    //on calcule le chemin le plus court du regroupement créé
                 }
             }
         }

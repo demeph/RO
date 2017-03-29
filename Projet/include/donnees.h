@@ -15,12 +15,12 @@ class donnees
     ~donnees();
     std::vector<regroupement> generer_regroupements() const;
     unsigned int distance( std::vector<unsigned int> lieux ) const;
+    void init_distance(regroupement& rgrp) const;
     unsigned int nblieux() const { return nblieux_; }
     unsigned int points_de_pompage() const { return nblieux_ -1; }
     unsigned int capacite() const { return capacite_; }
     unsigned int distancier(unsigned int x,unsigned int y) const {return C_[x][y];}
     unsigned int demande(unsigned int x) const {return demande_[x];}
-    void init_distance(regroupement& rgrp) const;
 
   private:
     
