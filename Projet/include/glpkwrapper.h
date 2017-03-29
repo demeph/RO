@@ -23,9 +23,9 @@ class glpkwrapper
     void afficher();
   private:
     // fonctions privées
-    void construit_couts(const std::vector<regroupement> & combinaison);
+    void construit_couts();
     void construit_pb();
-    void construit_taille_contr(probleme prob);
+    void construit_taille_contr();
 
     void def_probleme();
 
