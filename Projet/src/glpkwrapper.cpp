@@ -8,7 +8,7 @@ glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
     nb_creux_(0),
     probleme_(prob)
 {
-    couts = new int[nb_var_+1];
+    couts_ = new int[nb_var_+1];
 	construit_couts(prob.regroupements());
 	construit_taille_contr(prob); 
 
@@ -19,10 +19,10 @@ glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
 
 glpkwrapper::~glpkwrapper()
 {
-    delete[] ia;
-    delete[] ja;
-    delete[] ar;
-    delete[] couts;
+    delete[] ia_;
+    delete[] ja_;
+    delete[] ar_;
+    delete[] couts_;
     glp_delete_prob(trumpland);
 }
 
@@ -30,7 +30,7 @@ void glpkwrapper::construit_couts(const std::vector<regroupement> & combinaison)
 {
 	for (unsigned int i = 0; i < combinaison.size(); ++i)
 	{
-		couts[i] = combinaison[i].distance();
+		couts_[i] = combinaison[i].distance();
 	}
 }
 
@@ -38,16 +38,16 @@ void glpkwrapper::construit_taille_contr(probleme prob)
 {
 	int pos = 1;
 	for (unsigned int i =0; i < nb_contr_;++i) nb_creux_ += prob.regroupements_contenant()[i].size();
-	ia = new int[1+nb_creux_];
-	ja = new int[1+nb_creux_];
-	ar = new double[1+nb_creux_];
+	ia_ = new int[1+nb_creux_];
+	ja_ = new int[1+nb_creux_];
+	ar_ = new double[1+nb_creux_];
 	for (unsigned int i = 0; i < nb_contr_; ++i)
 	{
 		for (unsigned int j = 0; j < prob.regroupements_contenant()[i].size(); ++j)
 		{
-			ia[pos] = i+1;
-			ja[pos] = (prob.regroupements_contenant()[i][j]+1);
-			ar[pos] = 1.0;
+			ia_[pos] = i+1;
+			ja_[pos] = (prob.regroupements_contenant()[i][j]+1);
+			ar_[pos] = 1.0;
 			++pos;
 		}
 	}
@@ -72,9 +72,9 @@ void glpkwrapper::def_probleme()
 		glp_set_col_bnds(trumpland, i, GLP_DB, 0.0, 1.0);
 		glp_set_col_kind(trumpland, i, GLP_BV);
 	}  
-	for(unsigned i = 1;i <= nb_var_;++i) glp_set_obj_coef(trumpland,i,couts[i - 1]);  
+	for(unsigned i = 1;i <= nb_var_;++i) glp_set_obj_coef(trumpland,i,couts_[i - 1]);  
 
-	glp_load_matrix(trumpland,nb_creux_,ia,ja,ar); 
+	glp_load_matrix(trumpland,nb_creux_,ia_,ja_,ar_); 
 }
 
 void glpkwrapper::resoudre_probleme()

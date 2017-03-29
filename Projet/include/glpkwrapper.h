@@ -32,10 +32,10 @@ class glpkwrapper
     //variables
     unsigned int nb_contr_;
     unsigned int nb_var_;
-    int *couts;
-    int *ia;
-    int *ja;
-    double *ar;
+    int *couts_;
+    int *ia_;
+    int *ja_;
+    double *ar_;
     const int droite_;
     int nb_creux_;
 
