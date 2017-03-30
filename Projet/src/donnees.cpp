@@ -1,5 +1,5 @@
 #include "donnees.h"
-#include "container_overload.h"
+#include "container_overload.hpp"
 #include <algorithm>//next_permutation
 
 donnees::donnees(std::string file)
@@ -107,13 +107,12 @@ unsigned int donnees::distance( std::vector<unsigned int> lieux) const
 void donnees::init_distance(regroupement& rgrp) const
 {
     std::vector<unsigned int>& lieux(rgrp.lieux());
-    //les lieux sont initialement triés
     std::vector<unsigned int> ordre_opti(lieux);
     
     unsigned int min_dist = distance(lieux);
     unsigned int tmp_dist;
     while( std::next_permutation(lieux.begin(), lieux.end()) )
-    {
+    {//parcours des permutations. le parcours s'arrête lorsque la prochaine permutation est triée.
         tmp_dist = distance(lieux);
         if(tmp_dist < min_dist)
         {
@@ -123,7 +122,6 @@ void donnees::init_distance(regroupement& rgrp) const
     }
     lieux = ordre_opti;
     rgrp.distance() = min_dist;
-    
 }
 
 std::ostream& operator<<(std::ostream& os, donnees const& datas)

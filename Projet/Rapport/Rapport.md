@@ -3,51 +3,51 @@
 [TOC]
 ## Introduction
 
-Le projet consiste à trouver la meilleur solution pour collecter de l'eau de different point de pompage pour sauver l'humanité  en  utilisant la drone et en parcourant la distance minimal entre la base et les points de pompage. Notre travail consiste à generer tous les regroupement possible entre les points pompage en les filtrant suivant la capacité du drone. Ensuite, on calcule le plus courte chemin entre les points pompage et la base.
+Le projet consiste à trouver la meilleure solution pour collecter de l'eau parmis différents points de pompage en utilisant un drone capable de récupérer l'eau des points de pompage.
+Notre travail consiste à générer tous les regroupements possible entre les points pompage en les filtrant de manière à ce que la quantité totale d'eau qu'ils représentent ne dépasse pas la capacité de transport du drone.
+Il s'agit ensuite de déterminer les regroupements à choisir de manière à minimiser le trajet parcouru et à ne passer par un seul point, ce qui correspond à un problème de partitionnement d'ensemble.
 
 ## Analyse du problème 
-Posons tout d'abord ce problème sous la forme d'un programme linaire :
+Posons tout d'abord ce problème sous la forme d'un programme linéaire :
 
-### Les  notations du sujet
+### Paramètres
+- $Re$, l'ensemble des regroupements réalisables
+
+### Rappel des notations du sujet
 - $n \in \mathbb{N}$, le nombre de lieux
 - $d_i$, la quantité d'eau disponible au point $i$, avec $i \in \{1, ..., n\}$
 - $Ca \in \mathbb{N}$, la capacité du drone
+- $l_r$, la longueur de la plus courte tournée visitant chaque point de pompage du regroupement $r$
 
 ### Définition
-Un regroupement $r$ est dit *réalisable* si $\sum_{i \in r} d_i \leq Ca$
-
-### Paramètres
-- $Re$ l'ensemble des regroupements réalisables
+Un regroupement $$r$$ est dit *réalisable* si $$\sum_{i \in r} d_i \leq Ca$$.
+Autrement dit, si sa quantité d'eau totale peut être transportée par le drone.
 
 ### Variables de décison
-$$ x_i = \begin{cases}  1\space si\space on\space choisit\space le\space regroupement \space i  \\ 0 \space sinon \end{cases} $$
+$$ x_r = \begin{cases}  1\space si\space on\space choisit\space le\space regroupement \space r  \\ 0 \space sinon \end{cases} $$
+Avec $r\in Re$
 
 ### Fonction objectif
 Minimiser la distance parcourue par le drone 
-$$ min\space \sum_{i = 1}^{Card(Re)}  l_i *x_i$$
-avec $l_i$ la longueur de la plus courte tournée couvrant le regroupement $i$
-ce qui donne $$ \sum_{i=1}^{27} l_i*x_i $$ sur l'exemple donné dans le sujet.
+$$ min\space \sum_{r \in Re}  l_r *x_r$$
+ce qui donne $$ \sum_{i=1}^{27} l_i*x_i $$ sur l'exemple donné dans le sujet, car dans cet exemple, $Re = \{1, ..., 27\}$
 
 ### Contraintes
-- Le point de pompage $i$ doit être visité une et une seule fois, c'est-à-dire on doit avoir le nombre de regroupement dans laquelle apparait lieu de pompage i :
-  $$ \sum_ {i =1}^{nbRegroupement} x_i = 1 $$
+- Le point de pompage $i$ doit être visité une et une seule fois.
+  $$ \forall i \in \{1, ..., n\}, \sum_{r \in Re_i} x_i = 1 $$
+  Avec $Re_i$ l'ensemble des regroupements réalisables contenant $i$
 
-- contrainte sur l'exemple du sujet, pour le point de pompage 1 :
+- Contrainte sur l'exemple du sujet, pour le point de pompage 1 :
   $$ \sum_{i=1}^{13} x_i = 1 $$
+  En l'occurence, $Re_1 = \{1, ..., 13\}$
 
-- contrainte d'integrité :
-  $ x_i \in \{0,1\},\space \forall i \in [1,nbVariable]$
-
-Dans notre programme lineaire, on possede les paramètres qu'on ne connait pas  la valeur au debut. Ces sont  nbVariable*, *nbRegroupemet* : 
-
-- Pour calculer *nbVariable* , nous avons besoin degenerer tous les ss-ensembles en fonction de nombre de lieux de pompage(privé de 0) en utilisant l'algorithme de la section *Explication de l'algorithme*. 
-- La valeur nbRegroupement est donnée par le nombre de lieux de pompage(privé de 0).
-
+- Contrainte d'integrité :
+  $ x_i \in \{0,1\},\space \forall i \in Re$
 
 ## Description des algorithmes
 ### Génération des sous-ensembles
 
-Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est à dire celles dont la quantité d'eau ne dépasse pas la capacité du drone. Le code expliqué par la suite correspond à la méthode *donnees::generer_probleme*.
+Il s'agit ici de générer les sous-ensembles des tournées réalisables, c'est à dire celles dont la quantité d'eau ne dépasse pas la capacité du drone.
 
 Le principe utilisé ici est de générer les regroupements de taille 1 et de s'en servir pour générer ceux de taille 2 puis ceux de taille 3, et ainsi de suite.
 
@@ -56,7 +56,6 @@ Posons $p$ le nombre de points de pompage ( $p = n-1$ ).
 #### Initialisation
 La première étape consiste simplement à générer les tournées ne contenant qu'un seul point de pompage.
 On se retrouve donc avec $p$ vecteurs de taille 1.
-
 
 #### Hérédité
 ##### Genération
@@ -86,12 +85,11 @@ $$\forall\space i\space \in\space [\space max(r)+1,\space ...,\space p \space ],
 ### Calcul du plus court chemin
 La méthode utilisée pour calculer le plus court chemin d'un regroupement donné consiste simplement à parcourir toutes les permutations et calculer pour chacune la distance parcourue.
 
-## Explication des classes utilisées
+## Description des classes et en-têtes utilisés
 ### regroupement
-
 Cette classe représente un ensemble de points de pompage.
 
-#### Atributs
+#### Attributs
 | Attribut  | Type              | Description                              |
 | --------- | ----------------- | ---------------------------------------- |
 | lieux_    | vecteur d'entiers | indice des points de pompage du regroupement |
@@ -149,131 +147,106 @@ Cette classe est utilisée pour résoudre le problème de partitionnement.
 Initialise les couts de chaque tournée à la valeur du plus court chemin du regroupement représentant cette tournée en parcourant la distance le plus court de la regroupement.
 
 ``` void construit_taille_contr() ``` :
-Initialise les paramètres de la matrice creuse.
-
-Les coefficients de la matrice creuse. Pour faire cela dans la procedure on possede trois tableaux dynamiques d'entiers:  *ia,ja,ar*.  Initialisés au nombre de creux(nb_creux_) de la matrice creux :
-
-- *nb_creux_* : le nombre de  variable present dans chaque contrainte. Cette infrormation est  stocké dans la classe *problème* dans l'attribut de type *vector* : *regroupement_contenant* 
-- *ia* :  numero de contrainte
-- *ja* : les indices des variables de decision stockés dans  le vecteur *regroupement_contenant* de chaque contrainte *i*
-- *ar* : les couts  de chaque variable present dans la contrainte *i*, dans notre probleme les coûts de nos variable de decision sont égale à 1.
-
-Puis on definit les contraintes en glpk en definissant la borne des contraintes comme fixe et la partie droite des contraintes à la valeur de attribut *droite_* de la classe *glpkwrapper*. 
+Initialise les coefficients de la matrice creuse. Pour ce faire, on dispose de trois tableaux dynamiques d'entiers :  *ia_,ja_,ar_*. ces tableaux ont pour taille nb_creux_;
 
 ``` void def_probleme() ``` :
+Avec la fonction *glp_set_col_bnds*, on précise que les variables de décision comme sont entières, avec la valeur *GLP_DB* et puis en utilisant *glp_set_col_kind* on prcecise que ces sont des variables binaires en utilisant mots-clés *GLP_BV*. Puis en utilisant la fonction de *glpk*, *glp_set_obj_coef*, on attribut les couts *couts* à chaque variable de decision.
 
-
-- Definition des variables de decision
-
-  En utilisant la methode *glp_set_col_bnds*, on defiinit les variables de decision comme les variables entiers en utilisant du mots-clés *GLP_DB* et puis en utilisant *glp_set_col_kind* on prcecise que ces sont des variables binaires en utilisant mots-clés *GLP_BV*. Puis en utilisant la fonction de *glpk*, *glp_set_obj_coef*, on attribut les couts *couts* à chaque variable de decision.
-
-- Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia,ja,ar* defini en utilisant la procédure *construit_taille_contr*.
-
+Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia_,ja_,ar_* précedemment définis.
 
 ```void resoudre_probleme()``` :
-
-Au debut de cette procédure on appele la fonction *def_probleme*, puis on utilise les methodes déjà existant dans glpk pour resoudre le problème donnée.
-
-- ```glp_write_lp``` : cette methode nous permet d'écrire dans une fichier *.lp* le probleme sous la programme linéaire comme on aurait fait sur la feuille. Cette fonction est très utile, car ca simplifie le debogguage en cas d'erreur lors insertion des données.
-- ```glp_simplex```  : pour le problème donnée, cette méthode permet de resoudre en utilisant soit l'algorithme simplexe de phase I ou phase II
-- ```glp_intopt```  : cette methode permet d'obtenir une solution optimale en relaxant les variables de decision.
+Au début de cette procédure on appelle la fonction *def_probleme*, puis on utilise les fonctions fournies par glpk pour résoudre le problème.
+*glp_write_lp* nous permet d'écrire le problème dans un fichier *.lp* et permet de simplifier le debugguage en cas d'erreur lors de l'insertion des données.
+*glp_simplex* permet de résoudre le problème en utilisant l'algorithme du simplexe.
+*glp_intopt* permet d'obtenir une solution optimale en relaxant les variables de décision.
 
 ```void afficher()```:
+Cette méthode permet d'afficher la distance minimale à parcourir ainsi que les regroupements correspondant à cette distance.
+*glp_mip_obj_val* permet d'obtenir la valeur de la fonction objective.
+*glp_mip_col_val* cette méthode permet de parcourir une par une toutes les variables de décision.
 
-Dans cette méthode, on affiche la solution optimale et les valeurs de decision qui sont égale à 1. 
+### En-tête *container_overload.hpp*
+Cet en-tête contient des surcharges de l'opérateur de redirection sur flux pour les conteneurs std::vector et std::array.
 
-- ```glp_mip_obj_val``` : cette méthode permet d'obtenir la valeur de la fonction objective
-- ```glp_mip_col_val``` : cette méthode permet de parcourir un à un tous les variables de decision 
-
-### Autres Classes
-#### En-tête *Container-overload*
-Cet en-tête nous permet de surcharger l'opérateur *<<* pour faciliter l'affichage sur l'ecran.
-
-#### Implémentation des algorithmes en c++
-##### Génération des sous-ensembles
-###### Initialisation
+## Implémentation des algorithmes en c++
+### Génération des sous-ensembles
+Le code décrit dans cette section provient de la méthode *donnees::generer_regroupements*
+#### Initialisation
 ```c++
-std::vector<regroupement> regroupements;
+std::vector<regroupement> result;
+
 for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompage
     if(capacite_ >= demande_[i])//on teste quand même la capacité
-    {
-        regroupements.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
-        init_distance(regroupements.back());
-    }
+        result.emplace_back( std::vector<unsigned int>{i}, demande_[i]);
 ```
 
-###### Hérédité
+#### Hérédité
 ```c++
-unsigned int start = 0;
-unsigned int stop = regroupements.size();
 
+unsigned int start = 0;
+unsigned int stop = result.size();
+    
 for(unsigned int stage = 2; stage < nblieux_; ++stage)
 {//génération des sous-ensembles de taille stage
     for(; start < stop; ++start)
     {//parcours de chacun des points de taille stage-1
-        for(unsigned int i = regroupements[start].dernier_point() + 1; i < nblieux_; ++i)
-        {//création des regroupements de préfixe regroupements[start]
-            if(regroupements[start].quantite() + demande_[i] <= capacite_)
-            {//filtrage. seuls les regroupements réalisables sont ajoutés
-                regroupements.push_back( regroupements[start] );
-                //le nouveau regroupement est une copie de regroupements[start] ...
-                regroupements.back().add(i, demande_[i]);
+        for(unsigned int i = result[start].dernier_point() + 1; i < nblieux_; ++i)
+        {//création des result de préfixe result[start]
+            if(result[start].quantite() + demande_[i] <= capacite_)
+            {//filtrage. seuls les result dont la quantité d'eau est transportable sont ajoutés
+                result.push_back( result[start] );
+                //le nouveau regroupement est une copie de result[start] ...
+                result.back().add(i, demande_[i]);
                 // ... auquel on ajoute le point i et la quantité d'eau correspondante
-                init_distance(regroupements.back());
-                //on calcule le chemin le plus court du regroupement créé
             }
         }
     }
-
+        
     start = stop;
-    stop = regroupements.size();
+    stop = result.size();
 }
 ```
-
-La fonction init_distance servant calculer le chemin le plus court d'un regroupement sera expliquée dans la section suivante.
 
 ### Calcul du plus court chemin
 Comme expliqué dans la section *Description des algorithmes*, la méthode de calcul de plus court chemin consiste simplement à parcourir tous les chemins possibles et conserver le plus court.
 Pour cela, nous avons utilisé la fonction std::next_permutation permettant de parcourir une à une les permutations d'un conteneur de la bibliothèque standard.
 
-## Compilation
-Pour compiler notre projet, il suffit de suvre les etapes suivantes:
+```c++
+void donnees::init_distance(regroupement& rgrp) const
+{
+    std::vector<unsigned int>& lieux(rgrp.lieux());
+    std::vector<unsigned int> ordre_opti(lieux);
+    
+    unsigned int min_dist = distance(lieux);
+    unsigned int tmp_dist;
+    while( std::next_permutation(lieux.begin(), lieux.end()) )
+    {//parcours des permutations. le parcours s'arrête lorsque la prochaine permutation est triée.
+        tmp_dist = distance(lieux);
+        if(tmp_dist < min_dist)
+        {
+            ordre_opti = lieux;
+            min_dist = tmp_dist;
+        }
+    }
+    lieux = ordre_opti;
+    rgrp.distance() = min_dist;
+}
+```
 
-- il faut se placer dans le dossier build  en utilisant la commande
+## Compilation et execution
+### Compilation
+Ce projet utilise CMake pour générer des fichiers de compilation. Voici comment le compiler sous gnu/linux :
 
-  ```bash
-  cd build
-  ```
+Depuis le dossier *build*
+```bash
+cmake ..
+make
+```
 
-- Ensuite il faut taper la commande suivante:
+### Execution
+Toujours depuis le dossier *build*
+```bash
+./ro_test data/fichier.dat
+````
 
-  ```bash
-  cmake ..
-  ```
-
-- Puis
-
-  ```bash
-  make 
-  ```
-
-- A cet etape, il faut chosir pour qu'elle donne on veut calculer lancer notre programeme:
-
-  - Pour l'exemple du projet
-
-    ````bash
-    ./ro_test data/exemple.dat
-    ````
-
-  - Pour les données du dossier **A**
-
-    ````bash
-    ./ro_test data/A/nom_du_fichier.dat
-    ````
-
-  - Pour les données du dossier **B**
-
-    ```bash
-    ./ro_test data/B/nom_du_fichier.dat
-    ```
 ## Conclusion

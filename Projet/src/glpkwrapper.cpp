@@ -1,5 +1,5 @@
 #include "glpkwrapper.h"
-#include "container_overload.h"
+#include "container_overload.hpp"
 
 glpkwrapper::glpkwrapper(unsigned int nbContr, const probleme & prob):
     nb_contr_(nbContr-1),
@@ -37,7 +37,8 @@ void glpkwrapper::construit_couts()
 void glpkwrapper::construit_taille_contr()
 {
 	int pos = 1;
-	for (unsigned int i =0; i < nb_contr_;++i) nb_creux_ += probleme_.regroupements_contenant()[i].size();
+    for(auto& el : probleme_.regroupements_contenant())
+		nb_creux_ += el.size();
 	ia_ = new int[1+nb_creux_];
 	ja_ = new int[1+nb_creux_];
 	ar_ = new double[1+nb_creux_];
