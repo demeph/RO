@@ -182,7 +182,6 @@ for(unsigned int i = 1; i < nblieux_; ++i)//on parcours tous les points de pompa
 
 #### Hérédité
 ```c++
-
 unsigned int start = 0;
 unsigned int stop = result.size();
     
@@ -193,7 +192,7 @@ for(unsigned int stage = 2; stage < nblieux_; ++stage)
         for(unsigned int i = result[start].dernier_point() + 1; i < nblieux_; ++i)
         {//création des result de préfixe result[start]
             if(result[start].quantite() + demande_[i] <= capacite_)
-            {//filtrage. seuls les result dont la quantité d'eau est transportable sont ajoutés
+            {//filtrage. seuls les regroupements dont la quantité d'eau est transportable sont ajoutés
                 result.push_back( result[start] );
                 //le nouveau regroupement est une copie de result[start] ...
                 result.back().add(i, demande_[i]);
@@ -238,12 +237,14 @@ void donnees::init_distance(regroupement& rgrp) const
 Ce projet utilise CMake pour générer des fichiers de compilation. Voici comment le compiler sous gnu/linux :
 
 Depuis le dossier *build*
-```bash
+
+```
 cmake ..
 make
 ```
 
 ### Execution
+
 Toujours depuis le dossier *build*
 ```bash
 ./ro_test data/fichier.dat
@@ -251,4 +252,139 @@ Toujours depuis le dossier *build*
 
 ## Analyse des résultats
 À l'aide de la classe *chrono*, nous avons pu chronometrer les différentes étapes de la création et de la résolution du problème.
-La résolution du problème pour les données du dossier A se fait très rapidement
+Bien entendu, tous les tests ont été effectués sur la même machine.
+
+### Dossier A
+La résolution du problème pour les données du dossier A se fait très rapidement : à peine plus de 6 secondes sur une machine moderne pour 50 lieux, comme le montre la capture suivante :
+
+```./ro_test data/A/VRPA50.dat```
+```
+chargement des donnees du fichier data/A/VRPA50.dat ... 0 secondes
+
+calcul des regroupements réalisables ... 0.006 secondes
+nombre de regroupements générés : 44145
+
+calcul des plus courts chemins ... 0.036 secondes
+
+génération du problème ... 0 secondes
+
+résolution du problème avec glpk
+
+Writing problem data to 'trumpland.lp'...
+
+122038 lines were written
+
+[...]
+
+            INTEGER OPTIMAL SOLUTION FOUND
+
+la résolution du problème avec glpk a pris 6.293 secondes
+
+valeur optimale de la fonction objective :
+        Z* = 11666
+
+tournees selectionnees :
+        [13]
+        [1; 49]
+        [25; 33]
+        [34; 41]
+        [21; 4; 36]
+        [7; 39; 27]
+        [44; 9; 45]
+        [18; 10; 23]
+        [11; 22; 24]
+        [14; 29; 40]
+        [16; 47; 38]
+        [17; 20; 32]
+        [19; 48; 35]
+        [30; 28; 43]
+        [2; 5; 3; 37]
+        [6; 46; 42; 15]
+        [26; 12; 8; 31]
+
+temps de calcul total : 6.335
+```
+
+On remarque que c'est de loin la résolution du problème de partitionnement d'ensemble qui prends le plus de temps, les autres opérations étant négligeables devant celle-ci.
+
+### Dossier B
+Comme prévu, les données du dossier B sont plus difficiles à résoudre. La plus grande instance que nous avons réussi à résoudre est celle comportant 35 lieux :
+
+```./ro_test data/B/VRPB35.dat```
+
+```
+chargement des donnees du fichier data/B/VRPB35.dat ... 0 secondes
+
+calcul des regroupements réalisables ... 0.113 secondes
+nombre de regroupements générés : 1954584
+
+calcul des plus courts chemins ... 394.366 secondes
+
+génération du problème ... 0.066 secondes
+
+résolution du problème avec glpk
+
+Writing problem data to 'trumpland.lp'...
+6475627 lines were written
+
+[...]
+
+            INTEGER OPTIMAL SOLUTION FOUND
+
+la résolution du problème avec glpk a pris 705.524 secondes
+
+valeur optimale de la fonction objective :
+        Z* = 5399
+
+tournees selectionnees :
+         [10; 3; 32; 20]
+         [18; 28; 23; 12; 25]
+         [9; 30; 5; 17; 16; 29]
+         [19; 26; 6; 13; 27; 21]
+         [8; 33; 11; 14; 24; 34]
+         [1; 7; 4; 2; 31; 15; 22]
+
+temps de calcul total : 1100.07
+```
+#### Plus court chemin
+Même si c'est à nouveau glpk qui a consommé le plus de temps cpu, on remarque que le calcul du plus court chemin a pris un temps non négligeable cette fois ci.
+Cela est dû au fait que la méthode utilisée est sensible à l'explosion combinatoire. En effet, à un chemin de $n$ points correspond $n!$ permutations, permutations que notre implémentation parcours entièrement, et ce pour tous les regroupements.
+Il serait donc grandement profitable d'améliorer cette partie du programme. Le voyageur de commerce étant un problème difficile, nous n'avons cependant pas cherché à implémenter une solution plus efficace.
+
+#### Génération des regroupements réalisables
+Il est intéressant de remarquer que le calcul des regroupements s'est effectué très rapidement, comparé au plus court chemin.
+Bien que la génération de regroupements soit aussi sujette à l'explosion combinatoire, le fait que notre implémentation ne considère pas les regroupements de préfixe non réalisable permet en quelque sorte d'y échapper.
+En quelque sorte car c'est seulement dû à la faible capacité du drone.
+
+Nous avons effectué des tests en nous basant sur le fichier data/B/VRPB35.dat mais en remplaçant la capacité originale de 33 par une capacité de 40, 50 et 55. Les fichiers modifiés sont disponibles dans le dossier data/C.
+
+##### Test pour une capacité de 40
+```./ro_test data/C/40.dat```
+```
+chargement des donnees du fichier data/C/40.dat ... 0 secondes
+
+calcul des regroupements réalisables ... 0.719 secondes
+nombre de regroupements générés : 10976776
+```
+Avec seulement 7 capacité en plus, le calcul dure près de 7 fois plus longtemps et génère 5 fois plus de regroupements.
+
+##### Test pour une capacité de 50
+```./ro_test data/C/50.dat```
+```
+chargement des donnees du fichier data/C/50.dat ... 0 secondes
+
+calcul des regroupements réalisables ... 5.493 secondes
+nombre de regroupements générés : 83277188
+```
+Le temps de calcul reste raisonnable mais on remarque qu'il y a cette fois plus de 83 millions de regroupements générés, ce qui nécessite l'utilisation de plus de 8gb de mémoire vive.
+
+##### Test pour une capacité de 55
+```./ro_test data/C/55.dat```
+```
+chargement des donnees du fichier data/C/55.dat ... 0 secondes
+
+Killed
+```
+La quantité de mémoire nécessaire dépasse celle de la machine. Cependant, même avec suffisament de mémoire, cette instance aurait demandé beaucoup trop de temps pour être résolue. L'ajout de capacité entraîne la génération d'un grand nombre de regroupements, potentiellement plus longs que les précédents et pour chacun desquels il faut calculer un plus court chemin et rajouter des contraintes.
+
+On peut ainsi se rendre compte qu'il suffit de peu pour passer d'une instance résolvable à une instance dont la résolution est inconcevable.

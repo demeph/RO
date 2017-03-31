@@ -33,9 +33,10 @@ int main(int argc, char *argv[])
     chr.start();
     auto regroupements_realisables = data.generer_regroupements();
     chr.stop();
-
+    
     regr_compute_time = chr.to_sec();
-    cout << regr_compute_time << " secondes" << endl;
+    cout << regr_compute_time << " secondes\n"
+         << "nombre de regroupements générés : " << regroupements_realisables.size() << endl;
 
     cout << "\ncalcul des plus courts chemins ... ";
 
