@@ -147,12 +147,12 @@ Cette classe est utilisée pour résoudre le problème de partitionnement.
 Initialise les couts de chaque tournée à la valeur du plus court chemin du regroupement représentant cette tournée en parcourant la distance le plus court de la regroupement.
 
 ``` void construit_taille_contr() ``` :
-Initialise les coefficients de la matrice creuse. Pour ce faire, on dispose de trois tableaux dynamiques d'entiers :  *ia_,ja_,ar_*. ces tableaux ont pour taille nb_creux_;
+Initialise les coefficients de la matrice creuse.
 
 ``` void def_probleme() ``` :
 Avec la fonction *glp_set_col_bnds*, on précise que les variables de décision comme sont entières, avec la valeur *GLP_DB* et puis en utilisant *glp_set_col_kind* on prcecise que ces sont des variables binaires en utilisant mots-clés *GLP_BV*. Puis en utilisant la fonction de *glpk*, *glp_set_obj_coef*, on attribut les couts *couts* à chaque variable de decision.
 
-Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_,ia_,ja_,ar_* précedemment définis.
+Puis avec la procedure *glp_load_matrix* de *glpk* on charge *nb_creux_*, *ia_*, *ja_*, *ar_* précedemment définis.
 
 ```void resoudre_probleme()``` :
 Au début de cette procédure on appelle la fonction *def_probleme*, puis on utilise les fonctions fournies par glpk pour résoudre le problème.
@@ -247,6 +247,8 @@ make
 Toujours depuis le dossier *build*
 ```bash
 ./ro_test data/fichier.dat
-````
+```
 
-## Conclusion
+## Analyse des résultats
+À l'aide de la classe *chrono*, nous avons pu chronometrer les différentes étapes de la création et de la résolution du problème.
+La résolution du problème pour les données du dossier A se fait très rapidement
